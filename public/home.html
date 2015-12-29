@@ -1,0 +1,32 @@
+<article class="eight wide column" ng-controller="postController">
+   <form class="ui form fluid segment stacked blue" ng-Submit="post()">
+     <div class="required field">
+        <input type="text" placeholder="Who are you?" ng-model="newPost.created_by">
+     </div>
+     <div class="field">
+       <div class="ui icon input">
+         <input required type="text" placeholder="Whats on your mind?" ng-model="newPost.text" />
+         <i class="chat icon"></i>
+       </div>
+     </div>
+     <input class="ui button blue" type="submit" value="Send" id="send" />
+  </form>
+
+  <h3 class="ui blue header"><i class="ui chat icon"></i>Chat Feed</h3>
+    <div class="ui divider"></div>
+    <div class="ui feed message" ng-repeat="post in posts | filter:search | orderBy:'created_at':true" ng-class-odd="'floating teal'" ng-class-even="''">
+      <div class="event">
+        <div class="content">
+          <div class="summary">
+            <!--<a class="user" ng-click="friendPage(post.created_by)">-->
+            <a class="user" href="/#">
+             {{post.created_by}}
+            </a>
+            <div class="date">
+             {{(post.created_at - Date.now()) | date:"h:mma 'on' MMM d, y"}}
+            </div><br>{{post.text}}<br>
+          </div>
+        </div>
+      </div>
+    </div>
+</article>

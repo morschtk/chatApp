@@ -1,2 +1,39 @@
-<h1>{{title}}</h1>
-<p>Welcome to {{title}}</p>
+<!doctype html>
+<html ng-app="chat-app">
+	<head>
+    <title>Chat App</title>
+    <!--                            CSS FILES                                                         -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.0.0/semantic.min.css">
+    <link rel="stylesheet" href="/css/styles.css" type="text/css">
+	</head>
+
+	<body>
+		<header class="ui sixteen wide column" ng-controller="navController as NavCtrl">
+   		<nav class="ui secondary pointing menu blue floating top fixed">
+          <a class="item" href="#" ng-class="{ active : isSelected('index')}" ng-click="selectedPage('index')">
+            <i class="home icon"></i> Home
+          </a>
+        </nav>
+      </header>
+
+      <section ng-view class="ui grid container"></section>
+
+      <footer>
+         <div class=" bottom fixed ui inverted segment">
+           <p>Chat Application 2015</p>
+         </div>
+      </footer>
+
+   <!--                            SCRIPT FILES                                                         -->
+   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular.min.js"></script>
+   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular-route.min.js"></script>
+   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0/angular-resource.js"></script>
+   <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/1.12.3/semantic.min.js"></script>
+
+
+
+    <!--                            CONTROLLERS                                                         -->
+    <script src="js/chatApp.js"></script>
+	</body>
+</html>
