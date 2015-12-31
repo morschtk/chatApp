@@ -1,0 +1,28 @@
+<article class="column" ng-controller="authController">
+  <form class="ui form fluid segment piled blue column" ng-submit="register()">
+    <h3 class="ui dividing header">Register</h3>
+    <p class="text-warning">{{error_message}}</p>
+    <div class="two fields">
+      <div class="required field">
+        <label>Email</label>
+        <div class="ui icon input">
+          <input type="email" focus-me ng-model="user.username" placeholder="JohnDoe@email.com">
+          <i class="user icon"></i>
+        </div>
+      </div>
+      <div class="required field">
+        <label>Password</label>
+        <div class="ui icon input">
+          <input type="password" ng-model="user.password" placeholder="Password">
+          <i class="lock icon"></i>
+        </div>
+      </div>
+    </div>
+    <p>{{message}}</p>
+    <div class="ui error message">
+      <div class="header">We noticed some issues</div>
+    </div>
+    <input type="submit" value="Register" class="ui button blue" />
+    <input type="reset" value="Cancel" class="ui button red" />
+  </form>
+</article>

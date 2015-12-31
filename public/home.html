@@ -1,7 +1,70 @@
-<article class="eight wide column" ng-controller="postController">
+
+<!-- Slash Page -->
+<div class="ui grid" ng-show="!authenticated">
+<article class="six wide column">
+   <h2 class="ui header">
+      <div class="sub header">Hello There</div>
+      Log in to view and create awesome posts
+   </h2>
+</article>
+
+<article class="ten wide column">
+   <form class="ui form fluid segment piled blue" ng-submit="login()">
+    <h3 class="ui dividing header">Log in</h3>
+    <p class="text-warning">{{error_message}}</p>
+    <div class="two fields">
+      <div class="required field">
+        <label>Username</label>
+        <div class="ui icon input">
+          <input type="text" focus-me ng-model="user.username" placeholder="Username">
+          <i class="user icon"></i>
+        </div>
+      </div>
+      <div class="required field">
+        <label>Password</label>
+        <div class="ui icon input">
+          <input type="password" ng-model="user.password" placeholder="Password">
+          <i class="lock icon"></i>
+        </div>
+      </div>
+    </div>
+    <div class="ui error message">
+      <div class="header">We noticed some issues</div>
+    </div>
+    <input type="submit" value="Log in" class="ui button blue" />
+    <a href="/#/register" class="ui button ">Register</a>
+    <a class="ui facebook button" href="/facebook/callback">
+     <i class="facebook icon"></i>
+     Facebook
+  </a>
+   <button class="ui twitter button">
+     <i class="twitter icon"></i>
+     Twitter
+   </button>
+   <button class="ui google plus button">
+     <i class="google plus icon"></i>
+     Google Plus
+   </button>
+  </form>
+</article>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- authenticated Page -->
+<article class="eight wide column" ng-controller="postController" ng-show="authenticated">
    <form class="ui form fluid segment stacked blue" ng-Submit="post()">
      <div class="required field">
-        <input type="text" placeholder="Who are you?" ng-model="newPost.created_by">
+        <h4>{{current_user}} says </h4>
      </div>
      <div class="field">
        <div class="ui icon input">
