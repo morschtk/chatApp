@@ -1,7 +1,74 @@
-<article class="eight wide column" ng-controller="postController">
+
+<!-- Slash Page -->
+<div class="ui grid" ng-show="!authenticated">
+<article class="six wide column">
+   <h2 class="ui header">
+      <div class="sub header">Hello There</div>
+      Log in to view and create awesome posts
+   </h2>
+</article>
+
+<article class="ten wide column">
+   <form class="ui form fluid segment piled blue" ng-class="{ error : error_message}" ng-submit="login()">
+   <div class="ui error message">
+     <div class="header">Form Error</div>
+     <p>{{error_message}}</p>
+   </div>
+    <h3 class="ui dividing header">Log in</h3>
+    <p class="text-warning"></p>
+    <div class="two fields">
+      <div class="required field">
+        <label>Username</label>
+        <div class="ui icon input">
+          <input type="text" focus-me ng-model="user.username" placeholder="Username">
+          <i class="user icon"></i>
+        </div>
+      </div>
+      <div class="required field">
+        <label>Password</label>
+        <div class="ui icon input">
+          <input type="password" ng-model="user.password" placeholder="Password">
+          <i class="lock icon"></i>
+        </div>
+      </div>
+    </div>
+    <div class="ui error message">
+      <div class="header">We noticed some issues</div>
+    </div>
+    <input type="submit" value="Log in" class="ui button blue" />
+    <a href="/#/register" class="ui button ">Register</a>
+    <a class="ui facebook button" href="/facebook/callback">
+     <i class="facebook icon"></i>
+     Facebook
+  </a>
+   <a class="ui twitter button" href="/twitter">
+     <i class="twitter icon"></i>
+     Twitter
+  </a>
+   <a class="ui google plus button" href="/google">
+     <i class="google plus icon"></i>
+     Google Plus
+  </a>
+  </form>
+</article>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- authenticated Page -->
+<article class="eight wide column" ng-controller="postController" ng-show="authenticated">
    <form class="ui form fluid segment stacked blue" ng-Submit="post()">
      <div class="required field">
-        <input type="text" placeholder="Who are you?" ng-model="newPost.created_by">
+        <h4>{{current_user}} says </h4>
      </div>
      <div class="field">
        <div class="ui icon input">
