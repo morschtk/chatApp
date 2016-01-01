@@ -9,9 +9,13 @@
 </article>
 
 <article class="ten wide column">
-   <form class="ui form fluid segment piled blue" ng-submit="login()">
+   <form class="ui form fluid segment piled blue" ng-class="{ error : error_message}" ng-submit="login()">
+   <div class="ui error message">
+     <div class="header">Form Error</div>
+     <p>{{error_message}}</p>
+   </div>
     <h3 class="ui dividing header">Log in</h3>
-    <p class="text-warning">{{error_message}}</p>
+    <p class="text-warning"></p>
     <div class="two fields">
       <div class="required field">
         <label>Username</label>
@@ -37,14 +41,14 @@
      <i class="facebook icon"></i>
      Facebook
   </a>
-   <button class="ui twitter button">
+   <a class="ui twitter button" href="/twitter">
      <i class="twitter icon"></i>
      Twitter
-   </button>
-   <button class="ui google plus button">
+  </a>
+   <a class="ui google plus button" href="/google">
      <i class="google plus icon"></i>
      Google Plus
-   </button>
+  </a>
   </form>
 </article>
 </div>

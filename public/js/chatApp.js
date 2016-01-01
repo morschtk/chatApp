@@ -3,7 +3,7 @@ var app = angular.module('chat-app', ['ngRoute']).run(function($rootScope, $http
    $rootScope.current_user = "";
 });
 
-app.config(function($routeProvider){
+app.config(function($routeProvider, $interpolateProvider){
   $routeProvider
     //the home page
     .when('/', {
@@ -74,9 +74,14 @@ app.controller('authController', function($scope, $rootScope,$http, $location){
 
    $scope.register =  function(){
       $http.post('/register', $scope.user).success(function(data){
-         $rootScope.authenticated = true;
-         $rootScope.current_user = data.user.username;
-         $location.path('/');
+         if(data.state == 'success'){
+           $rootScope.authenticated = true;
+           $rootScope.current_user = data.user.username;
+           $location.path('/');
+         }
+         else{
+           $scope.error_message = data.message;
+         }
       })
    };
 
@@ -100,3 +105,38 @@ app.controller('authController', function($scope, $rootScope,$http, $location){
 
    $scope.checkSession();
 });
+
+$('.field.example form')
+  .form({
+    on: 'blur',
+    fields: {
+      empty: {
+        identifier  : 'empty',
+        rules: [
+          {
+            type   : 'empty',
+            prompt : 'Please enter a value'
+          }
+        ]
+      },
+      dropdown: {
+        identifier  : 'dropdown',
+        rules: [
+          {
+            type   : 'empty',
+            prompt : 'Please select a dropdown value'
+          }
+        ]
+      },
+      checkbox: {
+        identifier  : 'checkbox',
+        rules: [
+          {
+            type   : 'checked',
+            prompt : 'Please check the checkbox'
+          }
+        ]
+      }
+    }
+  })
+;

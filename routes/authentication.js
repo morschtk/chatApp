@@ -1,11 +1,12 @@
 var express = require('express');
 var router = express.Router();
+var flash = require('connect-flash');
 
 module.exports = function(passport){
 
    /* GET home page. */
    router.get('/', function(req, res, next) {
-     res.render('index');
+     res.render('index', {message: req.flash('error')[0], title: "hey"});
    });
 
     //sends successful login state back to angular
@@ -15,7 +16,7 @@ module.exports = function(passport){
 
     //sends failure login state back to angular
     router.get('/failure', function(req, res){
-        res.send({state: 'failure', user: null, message: "Invalid username or password"});
+        res.send({state: 'failure', user: null, message:req.flash('error')[0]});
     });
 
     //log in
@@ -38,10 +39,34 @@ module.exports = function(passport){
        res.redirect('/#');
      });
 
+     // Google
+     router.get('/google',
+       passport.authenticate('google', { scope: 'https://www.googleapis.com/auth/plus.login' }));
+
+     router.get('/google/callback',
+       passport.authenticate('google', { failureRedirect: '/login' }),
+       function(req, res) {
+         // Successful authentication, redirect home.
+         res.redirect('/');
+       });
+
+
+    //Twitter
+    router.get('/twitter',
+      passport.authenticate('twitter'));
+
+    router.get('/twitter/callback',
+      passport.authenticate('twitter', { failureRedirect: '/login' }),
+      function(req, res) {
+        // Successful authentication, redirect home.
+        res.redirect('/');
+      });
+
     //Register
     router.post('/register', passport.authenticate('register', {
         successRedirect: '/success',
-        failureRedirect: '/failure'
+        failureRedirect: '/failure',
+        failureFlash: true
     }));
 
     //log out

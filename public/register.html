@@ -1,7 +1,10 @@
 <article class="column" ng-controller="authController">
-  <form class="ui form fluid segment piled blue column" ng-submit="register()">
+   <form class="ui form fluid segment piled blue" ng-class="{ error : error_message}" ng-submit="register()">
+   <div class="ui error message">
+     <div class="header">Form Error</div>
+     <p>{{error_message}}</p>
+   </div>
     <h3 class="ui dividing header">Register</h3>
-    <p class="text-warning">{{error_message}}</p>
     <div class="two fields">
       <div class="required field">
         <label>Email</label>
@@ -18,7 +21,6 @@
         </div>
       </div>
     </div>
-    <p>{{message}}</p>
     <div class="ui error message">
       <div class="header">We noticed some issues</div>
     </div>
