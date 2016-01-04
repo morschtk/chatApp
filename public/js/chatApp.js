@@ -1,4 +1,4 @@
-var app = angular.module('chat-app', ['ngRoute']).run(function($rootScope, $http){
+var app = angular.module('chat-app', ['ngRoute', 'ngResource']).run(function($rootScope, $http){
    $rootScope.authenticated = false;
    $rootScope.current_user = "";
 });
@@ -35,15 +35,17 @@ app.controller('navController', function($scope) {
 	};
 });
 
-app.controller('postController', function($scope, $rootScope){
-   $scope.posts = [];
-   $scope.newPost = {created_by: '', text: '', created_at:''};
+app.controller('postController', function($scope, $rootScope, postService){
+   $scope.posts = postService.query();
+   $scope.newPost = {created_by: '', text: '', created_at: ''};
 
-   $scope.post = function(){
-      $scope.newPost.created_by = $rootScope.current_user;
-      $scope.newPost.created_at = Date.now();
-      $scope.posts.push($scope.newPost);
-      $scope.newPost = {created_by: '', text: '', created_at:''};
+   $scope.post = function() {
+     $scope.newPost.created_by = $rootScope.current_user;
+     $scope.newPost.created_at = Date.now();
+     postService.save($scope.newPost, function(){
+       $scope.posts = postService.query();
+       $scope.newPost = {created_by: '', text: '', created_at: ''};
+     });
    };
 });
 
@@ -97,13 +99,16 @@ app.controller('authController', function($scope, $rootScope,$http, $location){
       $http.get('/success', $scope.user).success(function(data){
         if(data.state == 'success' && data.user){
           $rootScope.authenticated = true;
-          $rootScope.current_user = data.user.username;
-          console.log()
+          $rootScope.current_user = data.user.id;
         }
       });
    };
 
    $scope.checkSession();
+});
+
+app.factory('postService', function($resource){
+  return $resource('/api/posts/:id');
 });
 
 $('.field.example form')

@@ -90,7 +90,7 @@
              {{post.created_by}}
             </a>
             <div class="date">
-             {{(post.created_at - Date.now()) | date:"h:mma 'on' MMM d, y"}}
+             {{(post.created_at) | date:"h:mma 'on' MMM d, y"}}
             </div><br>{{post.text}}<br>
           </div>
         </div>

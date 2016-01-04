@@ -75,11 +75,6 @@ module.exports = function(passport){
         res.redirect('/');
     });
 
-    //Custom error page
-    router.get('*', function(req, res) {
-        res.redirect('/#/error');
-    });
-
     return router;
 
 }
