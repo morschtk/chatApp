@@ -7,13 +7,15 @@ body {
 
 section.ui.grid.container {
    padding-top: 40px;
-   height: 94.7%;
-   margin-bottom: 0;
-   padding-bottom: 0;
+   min-height: 100%;
+   margin-bottom: 0px;
+   padding-bottom: 0px;
+   overflow: hidden;
+   position: relative;
 }
 
 article {
-   margin: auto;
+   margin: 1em auto;
 }
 
 a {
@@ -23,9 +25,5 @@ a {
 footer {
    text-align: center;
    width: 100%;
-}
-
-footer div {
-   position: relative;
    background-color: #333333;
 }
