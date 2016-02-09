@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
-var Post = mongoose.model('Post');
+var User = mongoose.model('User');
 
 
 //Used for routes that must be authenticated.
@@ -31,7 +31,7 @@ router.route('/posts')
    // Get all posts
    .get(function(req, res){
 
-      Post.find(function(err, data){
+      User.find({},function(err, data){
          if (err){
             res.send(500, err);
          }
@@ -42,7 +42,7 @@ router.route('/posts')
 
    //Create a new post
    .post(function(req, res){
-      var post = new Post();
+      var post = new User();
       post.text = req.body.text;
       post.created_by = req.body.created_by;
       post.save(function(err, post) {
@@ -58,7 +58,7 @@ router.route('/posts/:id')
 
    // Get the current post
    .get(function(req,res){
-      Post.findById(req.params.id, function(err, post){
+      User.findById(req.params.id, function(err, post){
          if(err)
              res.send(err);
          res.json(post);
@@ -67,7 +67,7 @@ router.route('/posts/:id')
 
     // Update the current post
     .put(function(req,res){
-      Post.findById(req.params.id, function(err, post){
+      User.findById(req.params.id, function(err, post){
            if(err)
                res.send(err);
 
@@ -85,7 +85,7 @@ router.route('/posts/:id')
 
     // Delete the current post
     .delete(function(req,res){
-      Post.remove({
+      User.remove({
            _id: req.params.id
       }, function(err) {
            if (err)

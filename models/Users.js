@@ -9,6 +9,11 @@ var userSchema = new mongoose.Schema({
     provider: {type: String, default: "Local"},
     created_at: {type: Date, default: Date.now},
     last_logged: {type: Date, default: Date.now},
+    posts: [{
+      id: { type: Schema.ObjectId },
+      created_at: {type: Date, default: Date.now},
+      text: String
+   }]
 });
 
 userSchema.plugin(findOrCreate);
