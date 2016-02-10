@@ -94,4 +94,66 @@ router.route('/posts/:id')
       });
     });
 
+//current_user follows a new user
+router.route('/follow/:id')
+  .put(function(req, res) {
+    User.findOneAndUpdate({
+      _id: req.params.id
+    },{
+      $push: { following: req.body._id }
+    },{
+      upsert: true
+    }, function(err) {
+      if (err) {
+        console.log('Error when current_user follows new user.');
+        return res.send(err);
+      }
+
+      User.findOneAndUpdate({
+        _id: req.body._id
+      },{
+        $push: { followers: req.params._id }
+      },{
+        upsert: true
+      }, function(err) {
+        if (err) {
+          console.log('Error when new user is followed by current_user.');
+          return res.send(err);
+        }
+        res.json('You are now following');
+      });
+    });
+  });
+
+  //current_user unfollows a new user
+  router.route('/unfollow/:id')
+    .put(function(req, res) {
+      User.update({
+        _id: req.params.id
+      },{
+        $pull: { following: req.body._id }
+      },{
+        upsert: true
+      }, function(err) {
+        if (err) {
+          console.log('Error when current_user follows new user.');
+          return res.send(err);
+        }
+
+        User.update({
+          _id: req.body._id
+        },{
+          $pull: { followers: req.params._id }
+        },{
+          upsert: true
+        }, function(err) {
+          if (err) {
+            console.log('Error when new user is followed by current_user.');
+            return res.send(err);
+          }
+          res.json('You are not following anymore!');
+        });
+      });
+    });
+
 module.exports = router;

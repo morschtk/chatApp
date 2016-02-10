@@ -9,6 +9,8 @@ var userSchema = new mongoose.Schema({
     provider: {type: String, default: "Local"},
     created_at: {type: Date, default: Date.now},
     last_logged: {type: Date, default: Date.now},
+    following: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    followers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     posts: [{
       id: { type: Schema.ObjectId },
       created_at: {type: Date, default: Date.now},
