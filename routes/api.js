@@ -31,25 +31,28 @@ router.route('/posts')
    // Get all posts
    .get(function(req, res){
 
-      User.find({},function(err, data){
+      User.find({}, {posts: 1},function(err, data){
          if (err){
             res.send(500, err);
          }
 
-         return res.send(data);
+         return res.send(data.posts);
       })
    })
 
    //Create a new post
    .post(function(req, res){
-      var post = new User();
-      post.text = req.body.text;
-      post.created_by = req.body.created_by;
-      post.save(function(err, post) {
-          if (err){
-             return res.send(500, err);
-          }
-          return res.json(post);
+    // Update the current post
+      User.findOneAndUpdate({
+        _id: req.body.created_by
+      },{
+        $push: {posts: { text: req.body.text}}
+      },
+      function(err){
+        if(err){
+          return res.send(err);
+        }
+        res.json(User);
       });
    });
 
@@ -66,20 +69,19 @@ router.route('/posts/:id')
    })
 
     // Update the current post
-    .put(function(req,res){
-      User.findById(req.params.id, function(err, post){
-           if(err)
-               res.send(err);
-
-           post.created_by = req.body.created_by;
-           post.text = req.body.text;
-
-           post.save(function(err, post){
-               if(err)
-                   res.send(err);
-
-               res.json(post);
-           });
+    .post(function(req,res){
+      User.findOneAndUpdate({
+        username: req.body.created_by
+      },{
+        $push: {posts: req.body.text}
+      },{
+        upsert: true
+      },
+      function(err){
+        if(err){
+          return res.send(err);
+        }
+          res.json(User);
       });
     })
 
