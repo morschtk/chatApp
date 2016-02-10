@@ -30,13 +30,23 @@ router.route('/posts')
 
    // Get all posts
    .get(function(req, res){
-
-      User.find({}, {posts: 1},function(err, data){
+      posts = [];
+      User.find({}, {posts: 1, _id: -1, displayName: 1},function(err, data){
          if (err){
             res.send(500, err);
          }
-
-         return res.send(data.posts);
+         for (i = 0; i < data.length; i++){
+            for (j = 0; j < data[i].posts.length; j++) {
+              post = {
+                created_by: data[i].displayName,
+                text: data[i].posts[j].text,
+                created_at: data[i].posts[j].created_at,
+                _id: data[i].posts[j]._id
+              }
+              posts.push(post);
+            }
+         }
+         return res.send(posts);
       })
    })
 

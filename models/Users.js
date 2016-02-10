@@ -10,7 +10,7 @@ var userSchema = new mongoose.Schema({
     created_at: {type: Date, default: Date.now},
     last_logged: {type: Date, default: Date.now},
     posts: [{
-      id: {type: Schema.Types.ObjectId, unique: true, default:Schema.Types.ObjectId},
+      id: {type: Schema.Types.ObjectId, unique: true},
       created_at: {type: Date, default: Date.now},
       text: String
    }]
