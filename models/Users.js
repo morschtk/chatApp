@@ -3,14 +3,14 @@ var Schema = mongoose.Schema;
 var findOrCreate = require('mongoose-findorcreate');
 
 var userSchema = new mongoose.Schema({
-    username: String,
+    _id: String,
     password: String, //hash created from password
     displayName: String,
     provider: {type: String, default: "Local"},
     created_at: {type: Date, default: Date.now},
     last_logged: {type: Date, default: Date.now},
     posts: [{
-      id: {type: Schema.Types.ObjectId, unique: true},
+      id: {type: Schema.Types.ObjectId},
       created_at: {type: Date, default: Date.now},
       text: String
    }]
