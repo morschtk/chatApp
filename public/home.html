@@ -91,7 +91,14 @@
             </a>
             <div class="date">
              {{(post.created_at) | date:"h:mma 'on' MMM d, y"}}
-            </div><br>{{post.text}}<br>
+            </div>
+            <br>
+            <a ng-click="followUser(post.user_id)">Follow {{post.created_by}}</a>
+            <br>
+            <a ng-click="unfollowUser(post.user_id)">Unfollow {{post.created_by}}</a>
+            <br>
+              {{post.text}}
+            <br>
           </div>
         </div>
       </div>

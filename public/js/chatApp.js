@@ -35,33 +35,44 @@ app.controller('navController', function($scope) {
 	};
 });
 
-app.controller('postController', function($scope, $rootScope, postService){
+app.controller('postController', function($scope, $rootScope, postService, followService, unfollowService){
    $scope.posts = postService.query();
-   $scope.newPost = {created_by: '', text: '', created_at: ''};
+   $scope.newPost = {created_by: '', text: ''};
 
    $scope.post = function() {
-     $scope.newPost.created_by = $rootScope.current_user.username;
-     $scope.newPost.created_at = Date.now();
+     $scope.newPost.created_by = $rootScope.current_user.id;
      postService.save($scope.newPost, function(){
        $scope.posts = postService.query();
-       $scope.newPost = {created_by: '', text: '', created_at: ''};
+       $scope.newPost = {created_by: '', text: ''};
      });
+   };
+
+   $scope.followUser = function(userId) {
+    var userToFollow = {_id: userId};
+    followService.update({id: $rootScope.current_user.id}, userToFollow);
+    // Call function to query current users posts
+   };
+
+   $scope.unfollowUser = function(userId) {
+    var userToUnfollow = {_id: userId};
+    unfollowService.update({id: $rootScope.current_user.id}, userToUnfollow);
+    // Call function to query current users posts
    };
 });
 
 app.controller('authController', function($scope, $rootScope,$http, $location){
-   $scope.user = {username: '', password: ''};
+   $scope.user = {username: 'morschtk@gmail.com', password: 'pass'};
    $scope.error_message = '';
 
    $scope.login = function() {
-      console.log('logging in');
       $http.post('/login', $scope.user).success(function(data){
         if(data.state == 'success'){
           $rootScope.authenticated = true;
           $rootScope.current_user = {
              id: data.user.id,
-             username: data.user.username
-          }
+             username: data.user.username,
+             following: data.user.following
+          };
           $location.path('/');
         }
         else{
@@ -73,8 +84,12 @@ app.controller('authController', function($scope, $rootScope,$http, $location){
    $scope.register =  function(){
       $http.post('/register', $scope.user).success(function(data){
          if(data.state == 'success'){
-           $rootScope.authenticated = true;
-           $rootScope.current_user = data.user.username;
+            $rootScope.authenticated = true;
+            $rootScope.current_user = {
+              id: data.user.id,
+              username: data.user.username,
+              following: data.user.following
+            };
            $location.path('/');
          }
          else{
@@ -97,7 +112,8 @@ app.controller('authController', function($scope, $rootScope,$http, $location){
           $rootScope.authenticated = true;
           $rootScope.current_user = {
              id: data.user.id,
-             username: data.user.username
+             username: data.user.username,
+             following: data.user.following
           }
         }
       });
@@ -110,10 +126,16 @@ app.factory('postService', function($resource){
   return $resource('/api/posts/:id');
 });
 
-app.factory('followService', function($resource){
-  return $resource('/api/follow/:id');
+app.factory('followService', function($resource) {
+  return $resource('/api/follow/:id', null,
+    {
+      'update': {method: 'put' }
+    });
 });
 
-app.factory('unfollowService', function($resource){
-  return $resource('/api/unfollow/:id');
+app.factory('unfollowService', function($resource) {
+  return $resource('/api/unfollow/:id', null,
+    {
+      'update': {method: 'put' }
+    });
 });

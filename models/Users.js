@@ -12,7 +12,7 @@ var userSchema = new mongoose.Schema({
     following: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     followers: [{ type: Schema.Types.ObjectId, ref: 'User' }],
     posts: [{
-      id: { type: Schema.ObjectId },
+      id: {type: Schema.Types.ObjectId, unique: true},
       created_at: {type: Date, default: Date.now},
       text: String
    }]

@@ -101,7 +101,7 @@ module.exports = function(passport){
      },
      function(token, tokenSecret, profile, done) {
         console.log(profile.name);
-       User.findOrCreate({ username: profile.id }, {displayName: profile.displayName, provider: "Twitter"}, function (err, user) {
+       User.findOrCreate({ username: profile.id }, {displayName: profile.displayName, provider: "Twitter", posts: []}, function (err, user) {
           user.username = profile.screen_name;
          return done(err, user);
        });

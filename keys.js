@@ -1,7 +1,7 @@
 //Facebook keys
 var facebook = {
-   FACEBOOK_APP_ID: "663337567141281",
-   FACEBOOK_APP_SECRET: "fda4e18e7a60aed609ba555f94bd79ea"
+   FACEBOOK_APP_ID: "618914078257391",
+   FACEBOOK_APP_SECRET: "ea8bb462b79d6cb36f1d36a25e296938"
 }
 
 //Twitter keys
