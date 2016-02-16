@@ -67,6 +67,26 @@ router.route('/posts')
       });
    });
 
+// Gets all the posts from who the current user is following including themself.
+router.route('/theFeed/:id')
+   .get(function(req, res) {
+    User.findOne({
+      _id: req.params.id
+    }).populate('following')
+      .exec(function(err, current_user) {
+        if (err) {
+          console.log('Error getting users feed. ', err);
+          return res.json(err);
+        }
+        allPosts = current_user.posts;
+        for (var i = 0; i < current_user.following.length; i++) {
+          allPosts = allPosts.concat(current_user.following[i].posts)
+        }
+        console.log(allPosts);
+        res.send(allPosts);
+      });
+   });
+
 // Api for a specfic post
 router.route('/posts/:id')
 
@@ -110,6 +130,8 @@ router.route('/posts/:id')
 //current_user follows a new user
 router.route('/follow/:id')
   .put(function(req, res) {
+    console.log(req.params.id);
+    console.log(req.body._id);
     User.findOneAndUpdate({
       _id: req.params.id
     },{
@@ -119,6 +141,7 @@ router.route('/follow/:id')
     }, function(err) {
       if (err) {
         console.log('Error when current_user follows new user.');
+        console.log(err);
         return res.send(err);
       }
 

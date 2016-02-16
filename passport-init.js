@@ -28,7 +28,7 @@ module.exports = function(passport){
      function(req, username, password, done) {
 
         // Check if user exists
-        User.findOne({username: username}, function(err, user){
+        User.findOne({_id: username}, function(err, user){
           if(err){
              return done(err);
           }
@@ -53,7 +53,7 @@ module.exports = function(passport){
      },
      function(req, username, password, done) {
          // Check if the user already exists
-         User.findOne({username: username}, function(err, user){
+         User.findOne({_id: username}, function(err, user){
             if (err){
                return done(err);
             }
@@ -65,9 +65,10 @@ module.exports = function(passport){
             // Add user to database
             var user = new User();
 
-            user.username = username;
+            user._id = username;
             user.password = createHash(password);
             user.displayName = username;
+            user.posts = [];
 
             user.save(function(err, user){
                if(err){

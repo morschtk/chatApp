@@ -35,29 +35,45 @@ app.controller('navController', function($scope) {
 	};
 });
 
-app.controller('postController', function($scope, $rootScope, postService, followService, unfollowService){
-   $scope.posts = postService.query();
-   $scope.newPost = {created_by: '', text: ''};
+app.controller('postController', function($scope, $rootScope, postService, followService, unfollowService, getFeed){
+  // $scope.posts = postService.query();
+  $scope.newPost = {created_by: '', text: ''};
 
-   $scope.post = function() {
-     $scope.newPost.created_by = $rootScope.current_user.id;
-     postService.save($scope.newPost, function(){
-       $scope.posts = postService.query();
-       $scope.newPost = {created_by: '', text: ''};
-     });
-   };
+  $scope.getUserFeed = function(userId) {
+    console.log(userId);
+    // getFeed.get({id: userId}, function(usersFeed) {
+    //   console.log(usersFeed);
+    // });
+    getFeed.query({id: userId}, function(results) {
+      $scope.posts = results;
+      console.log(results);
+    });
+    // console.log($scope.posts);
+  }
 
-   $scope.followUser = function(userId) {
-    var userToFollow = {_id: userId};
-    followService.update({id: $rootScope.current_user.id}, userToFollow);
-    // Call function to query current users posts
-   };
+  // $scope.getUserFeed($rootScope.current_user.id);
 
-   $scope.unfollowUser = function(userId) {
-    var userToUnfollow = {_id: userId};
-    unfollowService.update({id: $rootScope.current_user.id}, userToUnfollow);
-    // Call function to query current users posts
-   };
+  $scope.post = function() {
+    $scope.newPost.created_by = $rootScope.current_user.id;
+    postService.save($scope.newPost, function(){
+      $scope.posts = postService.query();
+      $scope.newPost = {created_by: '', text: ''};
+    });
+  };
+
+  $scope.followUser = function(userId) {
+    console.log(userId);
+    console.log($rootScope.current_user.following)
+   var userToFollow = {_id: userId};
+   followService.update({id: $rootScope.current_user.id}, userToFollow);
+   // Call function to query current users posts
+  };
+
+  $scope.unfollowUser = function(userId) {
+   var userToUnfollow = {_id: userId};
+   unfollowService.update({id: $rootScope.current_user.id}, userToUnfollow);
+   // Call function to query current users posts
+  };
 });
 
 app.controller('authController', function($scope, $rootScope,$http, $location){
@@ -70,7 +86,7 @@ app.controller('authController', function($scope, $rootScope,$http, $location){
           $rootScope.authenticated = true;
           $rootScope.current_user = {
              id: data.user.id,
-             username: data.user.username,
+             username: data.user.displayName,
              following: data.user.following
           };
           $location.path('/');
@@ -87,7 +103,7 @@ app.controller('authController', function($scope, $rootScope,$http, $location){
             $rootScope.authenticated = true;
             $rootScope.current_user = {
               id: data.user.id,
-              username: data.user.username,
+              username: data.user.displayName,
               following: data.user.following
             };
            $location.path('/');
@@ -135,6 +151,13 @@ app.factory('followService', function($resource) {
 
 app.factory('unfollowService', function($resource) {
   return $resource('/api/unfollow/:id', null,
+    {
+      'update': {method: 'put' }
+    });
+});
+
+app.factory('getFeed', function($resource) {
+  return $resource('/api/theFeed/:id', null,
     {
       'update': {method: 'put' }
     });
