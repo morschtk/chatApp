@@ -128,8 +128,8 @@ app.controller('authController', function($scope, $rootScope,$http, $location){
           $rootScope.authenticated = true;
           $rootScope.current_user = {
              id: data.user.id,
-             username: data.user.username,
-             following: data.user.following
+             following: data.user.following,
+             displayName: data.user.displayName
           }
         }
       });
