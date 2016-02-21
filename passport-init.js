@@ -28,7 +28,7 @@ module.exports = function(passport){
      function(req, username, password, done) {
 
         // Check if user exists
-        User.findOne({username: username}, function(err, user){
+        User.findOne({"loginMethods.id": username}, function(err, user){
           if(err){
              return done(err);
           }
@@ -53,7 +53,7 @@ module.exports = function(passport){
      },
      function(req, username, password, done) {
          // Check if the user already exists
-         User.findOne({username: username}, function(err, user){
+         User.findOne({"loginMethods.id": username}, function(err, user){
             if (err){
                return done(err);
             }
@@ -65,9 +65,12 @@ module.exports = function(passport){
             // Add user to database
             var user = new User();
 
-            user.username = username;
             user.password = createHash(password);
             user.displayName = username;
+            user.loginMethods = {
+              id: username
+            };
+            user.posts = [];
 
             user.save(function(err, user){
                if(err){
@@ -88,7 +91,7 @@ module.exports = function(passport){
        enableProof: false
      },
      function(accessToken, refreshToken, profile, done) {
-        User.findOrCreate({ username: profile.id }, {displayName: profile.displayName, provider: "Facebook"}, function (err, user) {
+        User.findOrCreate({ "loginMethods.id": profile.id }, {displayName: profile.displayName, loginMethods: {provider: "Facebook",id: profile.id}}, function (err, user) {
          return done(err, user);
        });
      }
@@ -101,22 +104,34 @@ module.exports = function(passport){
      },
      function(token, tokenSecret, profile, done) {
         console.log(profile.name);
-       User.findOrCreate({ username: profile.id }, {displayName: profile.displayName, provider: "Twitter"}, function (err, user) {
-          user.username = profile.screen_name;
+       User.findOrCreate({ "loginMethods.id": profile.id }, {displayName: profile.displayName, loginMethods: {provider: "Twitter",id: profile.id}}, function (err, user) {
          return done(err, user);
        });
      }
    ));
 
-   passport.use(new GoogleStrategy({
+   passport.use('loginGoogle', new GoogleStrategy({
        clientID: keys.google.GOOGLE_CLIENT_ID,
        clientSecret: keys.google.GOOGLE_CLIENT_SECRET,
        callbackURL: "http://localhost:3000/google/callback"
      },
      function(accessToken, refreshToken, profile, done) {
         console.log(profile);
-       User.findOrCreate({ username: profile.id }, {displayName: profile.displayName, provider: "Google"}, function (err, user) {
-         return done(err, user);
+       User.findOrCreate({ "loginMethods.id": profile.id }, {displayName: profile.displayName, loginMethods: {provider: "Google",id: profile.id}}, function (err, user) {
+          return done(err, user);
+       });
+     }
+   ));
+
+    passport.use('addGoogle', new GoogleStrategy({
+       clientID: keys.google.GOOGLE_CLIENT_ID,
+       clientSecret: keys.google.GOOGLE_CLIENT_SECRET,
+       callbackURL: "http://localhost:3000/google/callback"
+     },
+     function(accessToken, refreshToken, profile, done) {
+        console.log(profile);
+       User.findOrCreate({ "loginMethods.id": profile.id }, {displayName: profile.displayName, loginMethods: {provider: "Google",id: profile.id}}, function (err, user) {
+          return done(err, user);
        });
      }
    ));

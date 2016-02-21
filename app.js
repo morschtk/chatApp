@@ -6,8 +6,8 @@ var bodyParser = require('body-parser');
 var passport = require('passport');
 var session = require('express-session');
 var flash = require('connect-flash');
-
 require('./models/Users');
+require('./models/Posts');
 var api = require('./routes/api');
 var auth = require('./routes/authentication')(passport);
 var mongoose = require('mongoose');
@@ -37,13 +37,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
 app.use(passport.session());
 
-
-
-
 var passportinit = require('./passport-init');
 passportinit(passport);
 
 app.use('/', auth);
+app.use('/api', api);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -11,7 +11,7 @@ module.exports = function(passport){
 
     //sends successful login state back to angular
     router.get('/success', function(req, res){
-        res.send({state: 'success', user: req.user ? {id: req.user.id, username: req.user.username} : ""});
+        res.send({state: 'success', user: req.user ? {id: req.user.id, displayName: req.user.displayName} : ""});
     });
 
     //sends failure login state back to angular
@@ -40,11 +40,21 @@ module.exports = function(passport){
      });
 
      // Google
-     router.get('/google',
-       passport.authenticate('google', { scope: 'https://www.googleapis.com/auth/plus.login' }));
+     router.get('/logingoogle',
+       passport.authenticate('loginGoogle', { scope: 'https://www.googleapis.com/auth/plus.login' }));
 
      router.get('/google/callback',
-       passport.authenticate('google', { failureRedirect: '/login' }),
+       passport.authenticate('loginGoogle', { failureRedirect: '/login' }),
+       function(req, res) {
+         // Successful authentication, redirect home.
+         res.redirect('/');
+       });
+
+      router.get('/addgoogle',
+       passport.authenticate('addGoogle', { scope: 'https://www.googleapis.com/auth/plus.login' }));
+
+     router.get('/google/callback',
+       passport.authenticate('addGoogle', { failureRedirect: '/login' }),
        function(req, res) {
          // Successful authentication, redirect home.
          res.redirect('/');
@@ -58,6 +68,7 @@ module.exports = function(passport){
     router.get('/twitter/callback',
       passport.authenticate('twitter', { failureRedirect: '/login' }),
       function(req, res) {
+        console.log(req.body);
         // Successful authentication, redirect home.
         res.redirect('/');
       });
@@ -73,11 +84,6 @@ module.exports = function(passport){
     router.get('/logout', function(req, res) {
         req.logout();
         res.redirect('/');
-    });
-
-    //Custom error page
-    router.get('*', function(req, res) {
-        res.redirect('/#/error');
     });
 
     return router;
