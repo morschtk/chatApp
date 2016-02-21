@@ -40,11 +40,21 @@ module.exports = function(passport){
      });
 
      // Google
-     router.get('/google',
-       passport.authenticate('google', { scope: 'https://www.googleapis.com/auth/plus.login' }));
+     router.get('/logingoogle',
+       passport.authenticate('loginGoogle', { scope: 'https://www.googleapis.com/auth/plus.login' }));
 
      router.get('/google/callback',
-       passport.authenticate('google', { failureRedirect: '/login' }),
+       passport.authenticate('loginGoogle', { failureRedirect: '/login' }),
+       function(req, res) {
+         // Successful authentication, redirect home.
+         res.redirect('/');
+       });
+
+      router.get('/addgoogle',
+       passport.authenticate('addGoogle', { scope: 'https://www.googleapis.com/auth/plus.login' }));
+
+     router.get('/google/callback',
+       passport.authenticate('addGoogle', { failureRedirect: '/login' }),
        function(req, res) {
          // Successful authentication, redirect home.
          res.redirect('/');
@@ -58,6 +68,7 @@ module.exports = function(passport){
     router.get('/twitter/callback',
       passport.authenticate('twitter', { failureRedirect: '/login' }),
       function(req, res) {
+        console.log(req.body);
         // Successful authentication, redirect home.
         res.redirect('/');
       });

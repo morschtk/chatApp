@@ -1,26 +1,95 @@
-<article class="column" ng-controller="settingsController">
-  <form class="ui form fluid segment piled blue" ng-submit="login()">
-    <h3 class="ui dividing header">Log in</h3>
-    <p class="text-warning">{{error_message}}</p>
-    <div class="two fields">
-      <div class="required field">
-        <label>Username</label>
-        <div class="ui icon input">
-          <input type="text" focus-me ng-model="user.username" placeholder="Username">
-          <i class="user icon"></i>
+<article class="four wide column">
+  <user-info-box></user-info-box>
+  
+  <nav class="ui vertical pointing menu four wide column">
+    <a class="item" ng-class="{ active : isSelected('personal')}" ng-click="selectTab('personal')">
+      <i class="home icon"></i> Personal
+    </a>
+    <a class="item" ng-class="{ active : isSelected('account')}" ng-click="selectTab('account')">
+      <i class="mail icon"></i> Account 
+    </a>
+    <a class="item" ng-class="{ active : isSelected('privacy')}" ng-click="selectTab('privacy')">
+      <i class="user icon"></i> Privacy
+    </a>
+  </nav>
+</article>
+
+<article class="eight wide column">
+  <article ng-show="isSelected('personal')">
+     <form class="ui form" ng-submit="update(displayName,avatar)">
+        <h4 class="ui dividing header">Personal Information</h4>
+        <div class="two fields">
+          <div class="field">
+            <label>Name</label>
+            <div class="two fields">
+              <div class="field">
+                <input type="text" name="first-name" placeholder="First Name" >
+              </div>
+              <div class="field">
+                <input type="text" name="last-name" placeholder="Last Name">
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="required field">
+        <div class="field">
+          <input type="text" name="displayName" placeholder="{{user_display}}" ng-model="displayName">
+        </div>
+        
+        <h5>Choose a avatar...</h5>
+        <input class="ui button blue" type="submit" value="Send" id="send" />
+     </form>
+  </article>
+  
+  <article ng-show="isSelected('account')">
+    <form class="ui form">
+        <h2 class="ui dividing header">Account Information</h2>
+        <div class="two fields">
+          <div class="required field">
+            <label>Username</label>
+            <div class="ui icon input">
+              <input type="text" ng-model="user.username" placeholder="Username">
+              <i class="user icon"></i>
+            </div>
+          </div>
+          <div class="required field">
+            <label>Password</label>
+            <div class="ui icon input">
+              <input type="password" placeholder="Password">
+              <i class="lock icon"></i>
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <input type="text" name="displayName" placeholder="Display Name">
+        </div>
+
+        <h3>Login Methods</h3>
+        <a class="ui facebook button" href="/facebook/callback">
+     <i class="facebook icon"></i>
+     Facebook
+  </a>
+   <a class="ui twitter button" href="/twitter">
+     <i class="twitter icon"></i>
+     Twitter
+  </a>
+   <a class="ui google plus button" href="/google">
+     <i class="google plus icon"></i>
+     Google Plus
+  </a>
+        
+        <h5>Change Password</h5>
         <label>Password</label>
         <div class="ui icon input">
-          <input type="password" ng-model="user.password" placeholder="Password">
+          <input type="password" placeholder="Password">
           <i class="lock icon"></i>
         </div>
-      </div>
-    </div>
-    <div class="ui error message">
-      <div class="header">We noticed some issues</div>
-    </div>
-    <input type="submit" value="Log in" class="ui button blue" />
-  </form>
+        
+        <input class="ui button blue" type="submit" value="Send" id="send" />
+     </form>
+     <div class="ui inverted red button" ng-show='authenticated' ng-click="deleteUser(current_user)">Delete Account</div>
+  </article>
+  
+  <article ng-show="isSelected('privacy')">
+    <h3 class="ui header">Will add content here soon</h3>
+  </article>
 </article>
