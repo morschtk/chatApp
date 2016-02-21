@@ -1,0 +1,26 @@
+<article class="column" ng-controller="settingsController">
+  <form class="ui form fluid segment piled blue" ng-submit="login()">
+    <h3 class="ui dividing header">Log in</h3>
+    <p class="text-warning">{{error_message}}</p>
+    <div class="two fields">
+      <div class="required field">
+        <label>Username</label>
+        <div class="ui icon input">
+          <input type="text" focus-me ng-model="user.username" placeholder="Username">
+          <i class="user icon"></i>
+        </div>
+      </div>
+      <div class="required field">
+        <label>Password</label>
+        <div class="ui icon input">
+          <input type="password" ng-model="user.password" placeholder="Password">
+          <i class="lock icon"></i>
+        </div>
+      </div>
+    </div>
+    <div class="ui error message">
+      <div class="header">We noticed some issues</div>
+    </div>
+    <input type="submit" value="Log in" class="ui button blue" />
+  </form>
+</article>

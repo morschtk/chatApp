@@ -17,6 +17,10 @@ app.config(function($routeProvider, $interpolateProvider){
     .when('/register', {
       templateUrl: 'register.html',
     })
+    //The settings page
+    .when('/settings', {
+      templateUrl: 'settings.html'
+    })
     //the error page
     .when('/error', {
       templateUrl: 'error.html',
