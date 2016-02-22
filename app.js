@@ -11,6 +11,10 @@ require('./models/Posts');
 var api = require('./routes/api');
 var auth = require('./routes/authentication')(passport);
 var mongoose = require('mongoose');
+var connectMongo = require('connect-mongo');
+
+var MongoStore = connectMongo(session);
+
 mongoose.connect("mongodb://localhost/test");
 
 var app = express();
@@ -24,14 +28,23 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
 app.use(logger('dev'));
+app.use(cookieParser());
 app.use(session({
-   secret: 'secret',
-   resave: true,
-   saveUninitialized: true
+  secret: 'secret',
+  saveUninitialized: false,
+  resave: false,
+  cookie: {
+      path: '/',
+      domain: '',
+      httpOnly: true,
+      maxAge: 60 * 60 * 1000
+    },
+  store: new MongoStore({
+      mongooseConnection: mongoose.connection
+  })
 }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(flash());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());

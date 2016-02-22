@@ -1,7 +1,7 @@
 var appSettings = angular.module("appSettings", []);
 
-appSettings.controller('settingsController', [ '$scope', '$rootScope',
-    function($scope, $rootScope) {
+appSettings.controller('settingsController', [ '$scope', '$rootScope', '$http', '$location',
+    function($scope, $rootScope, $http, $location) {
 
     $scope.tab = "personal";
 
@@ -19,5 +19,13 @@ appSettings.controller('settingsController', [ '$scope', '$rootScope',
 
 	$scope.imgSelected = function(currentAvatar){
 		return $scope.avatar === currentAvatar;
+	};
+
+	$scope.connectTwitter = function() {
+		console.log('running this');
+		$http.get('/connect/twitter', $rootScope.id).success(function(data) {
+			$location.path('.');
+			//TODO: add toggles and checks for which accounts are connected
+		});
 	};
 }]);

@@ -67,12 +67,17 @@
 <!-- authenticated Page -->
 <article class="four wide column" ng-show="authenticated">
   <user-info-box></user-info-box>
+
+   <a class="ui twitter button" href="/connect/twitter/{{current_user.id}}">
+     <i class="twitter icon"></i>
+     Twitter
+  </a>
 </article>
 
 <article class="eight wide column" ng-controller="postController" ng-show="authenticated">
    <form class="ui form fluid segment stacked blue" ng-Submit="post()">
      <div class="required field">
-        <h4>{{current_user.displayName}} says </h4>
+        <h4>{{current_user.displayName}} says {{current_user.id}}</h4>
      </div>
      <div class="field">
        <div class="ui icon input">

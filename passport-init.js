@@ -110,6 +110,25 @@ module.exports = function(passport){
      }
    ));
 
+   passport.use('twitter-authz', new TwitterStrategy({
+       consumerKey: keys.twitter.TWITTER_CONSUMER_KEY,
+       consumerSecret: keys.twitter.TWITTER_CONSUMER_SECRET,
+       callbackURL: "http://localhost:3000/connect/twitter/callback"
+    },
+    function(token, tokenSecret, profile, done) {
+      console.log('hey');
+      User.find({ "loginMethods.id": profile.id }, function (err, user) {
+        if (err) { return done(err); }
+        if (user) { 
+          loginMethods= {provider: "Google",id: profile.id};
+          return done(null, loginMethods); 
+        }
+
+        return done(null, user);
+      });
+    }
+  ));
+
    passport.use('loginGoogle', new GoogleStrategy({
        clientID: keys.google.GOOGLE_CLIENT_ID,
        clientSecret: keys.google.GOOGLE_CLIENT_SECRET,

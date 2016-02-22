@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var flash = require('connect-flash');
+var mongoose = require('mongoose');
+var User = mongoose.model('User');
 
 module.exports = function(passport){
 
@@ -50,16 +52,6 @@ module.exports = function(passport){
          res.redirect('/');
        });
 
-      router.get('/addgoogle',
-       passport.authenticate('addGoogle', { scope: 'https://www.googleapis.com/auth/plus.login' }));
-
-     router.get('/google/callback',
-       passport.authenticate('addGoogle', { failureRedirect: '/login' }),
-       function(req, res) {
-         // Successful authentication, redirect home.
-         res.redirect('/');
-       });
-
 
     //Twitter
     router.get('/twitter',
@@ -72,6 +64,27 @@ module.exports = function(passport){
         // Successful authentication, redirect home.
         res.redirect('/');
       });
+
+    router.get('/connect/twitter/:id',
+      passport.authorize('twitter-authz', { failureRedirect: '/failure' })
+    );
+
+    router.get('/connect/twitter/callback',
+      passport.authorize('twitter-authz', { failureRedirect: '/failure' }),
+      function(req, res) {
+        console.log('NIGGA');
+        var id = params.id;
+        console.log(params.id + 'PARAMS ID');
+        console.log(loginMethods);
+        // Associate the Twitter account with the logged-in user.
+        user._id = id;
+        user.loginMethods.push(loginMethods);
+        user.findOneAndUpdate(function(err) {
+          if (err) { return self.error(err); }
+          self.redirect('/');
+        });
+      }
+    );
 
     //Register
     router.post('/register', passport.authenticate('register', {
