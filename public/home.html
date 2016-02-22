@@ -45,7 +45,7 @@
      <i class="twitter icon"></i>
      Twitter
   </a>
-   <a class="ui google plus button" href="/google">
+   <a class="ui google plus button" href="/logingoogle">
      <i class="google plus icon"></i>
      Google Plus
   </a>
@@ -65,10 +65,14 @@
 
 
 <!-- authenticated Page -->
+<article class="four wide column" ng-show="authenticated">
+  <user-info-box></user-info-box>
+</article>
+
 <article class="eight wide column" ng-controller="postController" ng-show="authenticated">
    <form class="ui form fluid segment stacked blue" ng-Submit="post()">
      <div class="required field">
-        <h4>{{current_user}} says </h4>
+        <h4>{{current_user.displayName}} says </h4>
      </div>
      <div class="field">
        <div class="ui icon input">
@@ -90,7 +94,7 @@
              {{post.created_by}}
             </a>
             <div class="date">
-             {{(post.created_at - Date.now()) | date:"h:mma 'on' MMM d, y"}}
+             {{(post.created_at) | date:"h:mma 'on' MMM d, y"}}
             </div><br>{{post.text}}<br>
           </div>
         </div>
