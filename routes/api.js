@@ -78,11 +78,38 @@ router.route('/theFeed/:id')
           console.log('Error getting users feed. ', err);
           return res.json(err);
         }
-        allPosts = current_user.posts;
-        for (var i = 0; i < current_user.following.length; i++) {
-          allPosts = allPosts.concat(current_user.following[i].posts)
+        // var allPosts = current_user.posts.map(function(post) {
+        //     console.log('yo', current_user.displayName);
+        //   post.created_by = current_user.displayName;
+        //   return post;
+        // });
+        var allPosts = [];
+
+        for (var i = 0; i < current_user.posts.length; i++) {
+          var post = {
+            user_id: current_user._id,
+            created_by: current_user.displayName,
+            text: current_user.posts[i].text,
+            created_at: current_user.posts[i].created_at,
+            _id: current_user.posts[i]._id
+          };
+          allPosts.push(post);
         }
-        console.log(allPosts);
+
+        for (var i = 0; i < current_user.following.length; i++) {
+          console.log('amount currUser following ', current_user.following.length);
+          for (var n = 0; n < current_user.following[i].posts.length; n++) {
+            var post = {
+              user_id: current_user.following[i]._id,
+              created_by: current_user.following[i].displayName,
+              text: current_user.following[i].posts[n].text,
+              created_at: current_user.following[i].posts[n].created_at,
+              _id: current_user.following[i].posts[n]._id
+            };
+            allPosts.push(post);
+          }
+        }
+
         res.send(allPosts);
       });
    });

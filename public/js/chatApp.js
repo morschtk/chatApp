@@ -36,43 +36,48 @@ app.controller('navController', function($scope) {
 });
 
 app.controller('postController', function($scope, $rootScope, postService, followService, unfollowService, getFeed){
-  // $scope.posts = postService.query();
+  $scope.posts = getFeed.query({id: $rootScope.current_user.id});
   $scope.newPost = {created_by: '', text: ''};
 
   $scope.getUserFeed = function(userId) {
-    console.log(userId);
-    // getFeed.get({id: userId}, function(usersFeed) {
-    //   console.log(usersFeed);
-    // });
     getFeed.query({id: userId}, function(results) {
       $scope.posts = results;
-      console.log(results);
     });
-    // console.log($scope.posts);
   }
 
-  // $scope.getUserFeed($rootScope.current_user.id);
+  $scope.checkFollows = function(name){
+    var checkedOut = true;
+    for(var i = 0; i < $rootScope.current_user.following.length; i++){
+      //If current user doesn't follow name then checked out equals true
+      if(name == $rootScope.current_user.following[i]){
+        checkedOut = false;
+      }
+    }
+    return checkedOut;
+  };
 
   $scope.post = function() {
     $scope.newPost.created_by = $rootScope.current_user.id;
     postService.save($scope.newPost, function(){
+      // $scope.posts = getFeed.query({id: $rootScope.current_user.id});
       $scope.posts = postService.query();
       $scope.newPost = {created_by: '', text: ''};
     });
   };
 
   $scope.followUser = function(userId) {
-    console.log(userId);
-    console.log($rootScope.current_user.following)
-   var userToFollow = {_id: userId};
-   followService.update({id: $rootScope.current_user.id}, userToFollow);
-   // Call function to query current users posts
+    var userToFollow = {_id: userId};
+    followService.update({id: $rootScope.current_user.id}, userToFollow);
+    $scope.posts = getFeed.query({id: $rootScope.current_user.id});
   };
 
   $scope.unfollowUser = function(userId) {
    var userToUnfollow = {_id: userId};
+
    unfollowService.update({id: $rootScope.current_user.id}, userToUnfollow);
-   // Call function to query current users posts
+
+   $scope.posts = getFeed.query({id: $rootScope.current_user.id});
+
   };
 });
 
@@ -86,9 +91,10 @@ app.controller('authController', function($scope, $rootScope,$http, $location){
           $rootScope.authenticated = true;
           $rootScope.current_user = {
              id: data.user.id,
-             username: data.user.displayName,
+             displayName: data.user.displayName,
              following: data.user.following
           };
+          $rootScope.current_user.following.push($rootScope.current_user.id);
           $location.path('/');
         }
         else{
@@ -103,10 +109,11 @@ app.controller('authController', function($scope, $rootScope,$http, $location){
             $rootScope.authenticated = true;
             $rootScope.current_user = {
               id: data.user.id,
-              username: data.user.displayName,
+              displayName: data.user.displayName,
               following: data.user.following
             };
-           $location.path('/');
+            $rootScope.current_user.following.push($rootScope.current_user.id);
+            $location.path('/');
          }
          else{
            $scope.error_message = data.message;
@@ -131,6 +138,7 @@ app.controller('authController', function($scope, $rootScope,$http, $location){
              following: data.user.following,
              displayName: data.user.displayName
           }
+          $rootScope.current_user.following.push($rootScope.current_user.id);
         }
       });
    };

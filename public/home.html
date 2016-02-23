@@ -94,9 +94,11 @@
              {{(post.created_at) | date:"h:mma 'on' MMM d, y"}}
             </div>
             <br>
-            <a ng-click="followUser(post.user_id)">Follow {{post.created_by}}</a>
+            <div ng-if="post.user_id !== current_user.id">
+            <a ng-if="checkFollows(post.user_id)" ng-click="followUser(post.user_id)">Follow {{post.created_by}}</a>
             <br>
-            <a ng-click="unfollowUser(post.user_id)">Unfollow {{post.created_by}}</a>
+            <a ng-if="!checkFollows(post.user_id)" ng-click="unfollowUser(post.user_id)">Unfollow {{post.created_by}}</a>
+            </div>
             <br>
               {{post.text}}
             <br>
