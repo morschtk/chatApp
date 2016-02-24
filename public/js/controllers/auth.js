@@ -11,8 +11,10 @@ appAuthentication.controller('authController', function($scope, $rootScope,$http
           $rootScope.authenticated = true;
           $rootScope.current_user = {
              id: data.user.id,
-             username: data.user.username
+             displayName: data.user.displayName,
+             following: data.user.following
           };
+          $rootScope.current_user.following.push($rootScope.current_user.id);
           $scope.checkSession();
           $location.path('/');
         }
@@ -28,9 +30,11 @@ appAuthentication.controller('authController', function($scope, $rootScope,$http
            $rootScope.authenticated = true;
           $rootScope.current_user = {
              id: data.user.id,
-             displayName: data.user.displayName
+             displayName: data.user.displayName,
+             following: data.user.following
           }
-           $location.path('/');
+            $rootScope.current_user.following.push($rootScope.current_user.id);
+            $location.path('/');
          }
          else{
            $scope.error_message = data.message;
@@ -53,8 +57,10 @@ appAuthentication.controller('authController', function($scope, $rootScope,$http
           $rootScope.authenticated = true;
           $rootScope.current_user = {
              id: data.user.id,
+             following: data.user.following,
              displayName: data.user.displayName
           };
+          $rootScope.current_user.following.push($rootScope.current_user.id);
         }
       });
    };

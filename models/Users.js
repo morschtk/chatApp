@@ -11,6 +11,8 @@ var userSchema = new mongoose.Schema({
     }],
     created_at: {type: Date, default: Date.now},
     last_logged: {type: Date, default: Date.now},
+    following: [{ type: String, ref: 'User', default: [] }],
+    followers: [{ type: String, ref: 'User', default: [] }],
     posts: [{
       id: {type: Schema.Types.ObjectId},
       created_at: {type: Date, default: Date.now},
