@@ -7,7 +7,6 @@ var passport = require('passport');
 var session = require('express-session');
 var flash = require('connect-flash');
 require('./models/Users');
-require('./models/Posts');
 var api = require('./routes/api');
 var auth = require('./routes/authentication')(passport);
 var mongoose = require('mongoose');

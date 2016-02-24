@@ -13,13 +13,24 @@ module.exports = function(passport){
 
     //sends successful login state back to angular
     router.get('/success', function(req, res){
-        res.send({state: 'success', user: req.user ? {id: req.user.id, displayName: req.user.displayName} : ""});
+      res.send({state: 'success', user: req.user ? {id: req.user.id, displayName: req.user.displayName} : ""});
     });
 
     //sends failure login state back to angular
     router.get('/failure', function(req, res){
         res.send({state: 'failure', user: null, message:req.flash('error')[0]});
     });
+
+    // =============================================================================
+    // AUTHENTICATE (FIRST LOGIN) ==================================================
+    // =============================================================================
+
+    //Register
+    router.post('/register', passport.authenticate('register', {
+        successRedirect: '/success',
+        failureRedirect: '/failure',
+        failureFlash: true
+    }));
 
     //log in
     router.post('/login', passport.authenticate('login', {
@@ -29,93 +40,160 @@ module.exports = function(passport){
     }));
 
     //Facebook
-    router.get('/facebook/:id', passport.authenticate('facebook', {
-       successRedirect: '/success',
-       failureRedirect: '/failure'
-    }));
+    router.get('/facebook', passport.authenticate('facebook'));
 
     router.get('/facebook/callback',
-     passport.authenticate('facebook', { failureRedirect: '/failure' }),
-     function(req, res) {
-      id = req.param.id;
-      console.log('1: ' + id);
-      console.log('2: ' + req.param.id);
-       // Successful authentication, redirect home.
-       res.redirect('/#');
-     });
-
-     // Google
-     router.get('/logingoogle',
-       passport.authenticate('loginGoogle', { scope: 'https://www.googleapis.com/auth/plus.login' }));
-
-     router.get('/google/callback',
-       passport.authenticate('loginGoogle', { failureRedirect: '/login' }),
-       function(req, res) {
-         // Successful authentication, redirect home.
-         res.redirect('/');
-       });
-
-    router.get('/connect/google/:_id',
-      passport.authorize('google-authz', { failureRedirect: '/failure' })
-    );
-
-    router.get('/connect/google/callback',
-      passport.authorize('google-authz', { failureRedirect: '/failure' }),
-        function(req, res) {
-        console.log('NIGGA');
-        var id = params.id;
-        console.log(params.id + 'PARAMS ID');
-        console.log(loginMethods);
-        // Associate the Twitter account with the logged-in user.
-        user._id = id;
-        user.loginMethods.push(loginMethods);
-        user.findOneAndUpdate(function(err) {
-          if (err) { return self.error(err); }
-          self.redirect('/');
-        });
-      }
-    );
-
+     passport.authenticate('facebook', {
+                successRedirect : '/#',
+                failureRedirect : '/'
+     }));
 
     //Twitter
-    router.get('/twitter',
-      passport.authenticate('twitter'));
+    router.get('/twitter', passport.authenticate('twitter'));
 
     router.get('/twitter/callback',
-      passport.authenticate('twitter', { failureRedirect: '/login' }),
-      function(req, res) {
-        console.log(req.body);
-        // Successful authentication, redirect home.
-        res.redirect('/');
-      });
+     passport.authenticate('twitter', {
+                successRedirect : '/#',
+                failureRedirect : '/'
+     }));
 
-    router.get('/connect/twitter/:id',
-      passport.authorize('twitter-authz', { failureRedirect: '/failure' })
-    );
+     // Google
+    router.get('/google', passport.authenticate('google', { scope: 'https://www.googleapis.com/auth/plus.login' }));
 
-    router.get('/connect/twitter/callback',
-      passport.authorize('twitter-authz', { failureRedirect: '/failure' }),
-        function(req, res) {
-        console.log('NIGGA');
-        var id = params.id;
-        console.log(params.id + 'PARAMS ID');
-        console.log(loginMethods);
-        // Associate the Twitter account with the logged-in user.
-        user._id = id;
-        user.loginMethods.push(loginMethods);
-        user.findOneAndUpdate(function(err) {
-          if (err) { return self.error(err); }
-          self.redirect('/');
+    router.get('/google/callback',
+     passport.authenticate('google', {
+                successRedirect : '/#',
+                failureRedirect : '/'
+     }));
+
+
+
+
+    // =============================================================================
+    // AUTHORIZE (ALREADY LOGGED IN / CONNECTING OTHER SOCIAL ACCOUNT) =============
+    // =============================================================================
+
+        // locally --------------------------------
+        router.get('/connect/local', function(req, res) {
+            res.render('connect-local.ejs', { message: req.flash('loginMessage') });
         });
-      }
-    );
+        router.post('/connect/local', passport.authenticate('local-signup', {
+            successRedirect : '/#', // redirect to the secure # section
+            failureRedirect : '/connect/local', // redirect back to the signup page if there is an error
+            failureFlash : true // allow flash messages
+        }));
 
-    //Register
-    router.post('/register', passport.authenticate('register', {
-        successRedirect: '/success',
-        failureRedirect: '/failure',
-        failureFlash: true
-    }));
+    // facebook -------------------------------
+
+        // send to facebook to do the authentication
+        router.get('/connect/facebook', passport.authorize('facebook'));
+
+        // handle the callback after facebook has authorized the user
+        router.get('/connect/facebook/callback',
+            passport.authorize('facebook', {
+                successRedirect : '/#',
+                failureRedirect : '/'
+            }));
+
+    // twitter --------------------------------
+
+        // send to facebook to do the authentication
+        router.get('/connect/twitter', passport.authorize('twitter'));
+
+        // handle the callback after facebook has authorized the user
+        router.get('/connect/twitter/callback',
+            passport.authorize('twitter', {
+                successRedirect : '/#',
+                failureRedirect : '/'
+            }));
+
+
+    // google ---------------------------------
+
+        // send to facebook to do the authentication
+        router.get('/connect/google', passport.authorize('google', { scope: 'https://www.googleapis.com/auth/plus.login' }));
+
+        // handle the callback after facebook has authorized the user
+        router.get('/connect/google/callback',
+            passport.authorize('google', {
+                successRedirect : '/#',
+                failureRedirect : '/'
+            }));
+
+        // =============================================================================
+        // UNLINK ACCOUNTS =============================================================
+        // =============================================================================
+        // used to unlink accounts. for social accounts, just remove the token
+        // for local account, remove email and password
+        // user account will stay active in case they want to reconnect in the future
+
+            // local -----------------------------------
+            router.get('/unlink/local', function(req, res) {
+              User.findOneAndUpdate({
+                  _id: req.user._id
+                },{
+                  $pull: {"loginMethods": {provider: "Local"}}
+                },
+                function(err){
+                  if(err){
+                    return done(err, false);
+                  }
+                    console.log('Successfully connected local to ' + req.user.displayName);
+                    
+                    res.redirect('/');
+              });
+            });
+
+            // facebook -------------------------------
+            router.get('/unlink/facebook', function(req, res) {
+              User.findOneAndUpdate({
+                  _id: req.user._id
+                },{
+                  $pull: {"loginMethods": {provider: "Facebook"}}
+                },
+                function(err){
+                  if(err){
+                    return done(err, false);
+                  }
+                    console.log('Successfully connected facebook to ' + req.user.displayName);
+                    
+                    res.redirect('/');
+              });
+            });
+
+            // twitter --------------------------------
+            router.get('/unlink/twitter', function(req, res) {
+              User.findOneAndUpdate({
+                  _id: req.user._id
+                },{
+                  $pull: {"loginMethods": {provider: "Twitter"}}
+                },
+                function(err){
+                  if(err){
+                    return done(err, false);
+                  }
+                    console.log('Successfully connected twitter to ' + req.user.displayName);
+                    
+                    res.redirect('/');
+              });
+            });
+
+            // google ---------------------------------
+            router.get('/unlink/google', function(req, res) {
+              User.findOneAndUpdate({
+                  _id: req.user._id
+                },{
+                  $pull: {"loginMethods": {provider: "Google"}}
+                },
+                function(err){
+                  if(err){
+                    return done(err, false);
+                  }
+                    console.log('Successfully connected google to ' + req.user.displayName);
+                    
+                    res.redirect('/');
+              });
+            });
 
     //log out
     router.get('/logout', function(req, res) {
