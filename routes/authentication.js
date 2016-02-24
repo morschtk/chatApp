@@ -29,7 +29,7 @@ module.exports = function(passport){
     }));
 
     //Facebook
-    router.post('/facebook', passport.authenticate('facebook', {
+    router.get('/facebook/:id', passport.authenticate('facebook', {
        successRedirect: '/success',
        failureRedirect: '/failure'
     }));
@@ -37,6 +37,9 @@ module.exports = function(passport){
     router.get('/facebook/callback',
      passport.authenticate('facebook', { failureRedirect: '/failure' }),
      function(req, res) {
+      id = req.param.id;
+      console.log('1: ' + id);
+      console.log('2: ' + req.param.id);
        // Successful authentication, redirect home.
        res.redirect('/#');
      });
@@ -51,6 +54,27 @@ module.exports = function(passport){
          // Successful authentication, redirect home.
          res.redirect('/');
        });
+
+    router.get('/connect/google/:_id',
+      passport.authorize('google-authz', { failureRedirect: '/failure' })
+    );
+
+    router.get('/connect/google/callback',
+      passport.authorize('google-authz', { failureRedirect: '/failure' }),
+        function(req, res) {
+        console.log('NIGGA');
+        var id = params.id;
+        console.log(params.id + 'PARAMS ID');
+        console.log(loginMethods);
+        // Associate the Twitter account with the logged-in user.
+        user._id = id;
+        user.loginMethods.push(loginMethods);
+        user.findOneAndUpdate(function(err) {
+          if (err) { return self.error(err); }
+          self.redirect('/');
+        });
+      }
+    );
 
 
     //Twitter
@@ -71,7 +95,7 @@ module.exports = function(passport){
 
     router.get('/connect/twitter/callback',
       passport.authorize('twitter-authz', { failureRedirect: '/failure' }),
-      function(req, res) {
+        function(req, res) {
         console.log('NIGGA');
         var id = params.id;
         console.log(params.id + 'PARAMS ID');

@@ -88,10 +88,12 @@ module.exports = function(passport){
        clientID: keys.facebook.FACEBOOK_APP_ID,
        clientSecret: keys.facebook.FACEBOOK_APP_SECRET,
        callbackURL: "http://localhost:3000/facebook/callback",
-       enableProof: false
+       enableProof: false,
+       passReqToCallback : true
      },
-     function(accessToken, refreshToken, profile, done) {
-        User.findOrCreate({ "loginMethods.id": profile.id }, {displayName: profile.displayName, loginMethods: {provider: "Facebook",id: profile.id}}, function (err, user) {
+     function(req,accessToken, refreshToken, profile, done) {
+      console.log('4: ' + JSON.parse(req.params));
+        User.findOrCreate({ _id: req.param.id }, {displayName: profile.displayName, loginMethods: {provider: "Facebook",id: profile.id}}, function (err, user) {
          return done(err, user);
        });
      }
@@ -113,7 +115,8 @@ module.exports = function(passport){
    passport.use('twitter-authz', new TwitterStrategy({
        consumerKey: keys.twitter.TWITTER_CONSUMER_KEY,
        consumerSecret: keys.twitter.TWITTER_CONSUMER_SECRET,
-       callbackURL: "http://localhost:3000/connect/twitter/callback"
+       callbackURL: "http://localhost:3000/connect/twitter/callback",
+
     },
     function(token, tokenSecret, profile, done) {
       console.log('hey');
@@ -142,18 +145,25 @@ module.exports = function(passport){
      }
    ));
 
-    passport.use('addGoogle', new GoogleStrategy({
+   passport.use('google-authz', new GoogleStrategy({
        clientID: keys.google.GOOGLE_CLIENT_ID,
        clientSecret: keys.google.GOOGLE_CLIENT_SECRET,
-       callbackURL: "http://localhost:3000/google/callback"
-     },
-     function(accessToken, refreshToken, profile, done) {
-        console.log(profile);
-       User.findOrCreate({ "loginMethods.id": profile.id }, {displayName: profile.displayName, loginMethods: {provider: "Google",id: profile.id}}, function (err, user) {
-          return done(err, user);
-       });
-     }
-   ));
+       callbackURL: "http://localhost:3000/connect/google/callback"
+    },
+    function(accessToken, refreshToken, profile, done) {
+      console.log('hey');
+      User.find({ "loginMethods.id": profile.id }, function (err, user) {
+        if (err) { return done(err); }
+        if (user) { 
+          loginMethods= {provider: "Google",id: profile.id};
+          return done(null, loginMethods); 
+        }
+
+        return done(null, user);
+      });
+    }
+  ));
+
 
     var isValidPassword = function(user, password){
         return bCrypt.compareSync(password, user.password);
