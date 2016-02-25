@@ -5,7 +5,6 @@ appAuthentication.controller('authController', function($scope, $rootScope,$http
    $scope.error_message = '';
 
    $scope.login = function() {
-      console.log('logging in');
       $http.post('/login', $scope.user).success(function(data){
         if(data.state == 'success'){
           $rootScope.authenticated = true;
