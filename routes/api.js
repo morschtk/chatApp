@@ -70,9 +70,8 @@ router.route('/posts')
 // Gets all the posts from who the current user is following including themself.
 router.route('/theFeed/:id')
    .get(function(req, res) {
-    User.findOne({
-      _id: req.params.id
-    }).populate('following')
+    User.findOne({ _id: req.params.id }, { password: 0})
+      .populate('following')
       .exec(function(err, current_user) {
         if (err) {
           console.log('Error getting users feed. ', err);
@@ -103,7 +102,12 @@ router.route('/theFeed/:id')
             allPosts.push(post);
           }
         }
-        res.json(allPosts);
+        var user_allPosts = {
+          current_user: current_user,
+          allPosts: allPosts
+        };
+        user_allPosts.current_user.posts = [];
+        res.json(user_allPosts);
       });
    });
 
