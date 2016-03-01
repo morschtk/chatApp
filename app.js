@@ -11,7 +11,7 @@ var api = require('./routes/api');
 var auth = require('./routes/authentication')(passport);
 var mongoose = require('mongoose');
 var connectMongo = require('connect-mongo');
-
+var socketio = require('socket.io');
 var MongoStore = connectMongo(session);
 
 mongoose.connect("mongodb://localhost/test");

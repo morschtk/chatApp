@@ -10,6 +10,10 @@ module.exports = function(passport){
    router.get('/', function(req, res, next) {
      res.render('index', {message: req.flash('error')[0], title: "hey"});
    });
+   
+    router.get('/socket', function(req, res, next) {
+     res.render('socket', {message: req.flash('error')[0], title: "hey"});
+   });
 
     //sends successful login state back to angular
     router.get('/success', function(req, res){
