@@ -35,12 +35,7 @@ module.exports = function(passport){
      function(req, username, password, done) {
         if (!req.user) {
           // Check if user exists
-          User.findOne({"loginMethods.id": username}, function(err, user){
-            // var array = user.loginMethods;
-            // var index = array.filter(function ( index ) {
-            //     return index;
-            // })[0];
-            //   console.log(user.loginMethods[s"Local"]);// can't retrieve password
+          User.findOne({"email": username}, function(err, user){
             if(err){
                return done(err);
             }
@@ -49,7 +44,7 @@ module.exports = function(passport){
                return done(null, false, { message: "Incorrect Username." });
             }
 
-            if(!isValidPassword(index.id, index.password)){
+            if(!isValidPassword(user, password)){
                // wrong password
                return done(null, false, { message: 'Incorrect Password' });
             }
@@ -80,7 +75,7 @@ module.exports = function(passport){
      },
      function(req, username, password, done) {
          // Check if the user already exists
-         User.findOne({"loginMethods.id": username}, function(err, user){
+         User.findOne({"email": username}, function(err, user){
             if (err){
                return done(err);
             }
@@ -92,11 +87,9 @@ module.exports = function(passport){
             // Add user to database
             var user = new User();
 
+            user.password = createHash(password);
             user.displayName = username;
-            user.loginMethods = {
-              id: username,
-              password: createHash(password)
-            };
+            user.email = username;
             user.posts = [];
 
             user.save(function(err, user){
@@ -125,24 +118,34 @@ module.exports = function(passport){
       if (!req.user) {
         User.findOrCreate({ "loginMethods.id": profile.id }, {displayName: profile.displayName, loginMethods: {provider: "Facebook",id: profile.id}}, function (err, user) {
           if (err) { return done(err); }
-          
-          return done(err, user); 
+
+          return done(err, user);
 
         });
       } else {
-        User.findOneAndUpdate({
-            _id: req.user._id
-          },{
-            $push: {loginMethods: {provider: "Facebook",id: profile.id}}
-          },
-          function(err){
-            if(err){
-              return done(err, false);
-            }
-              console.log('Successfully connected facebook to ' + req.user.displayName);
+         User.findOne({ "loginMethods.id": profile.id }, function (err, user) {
+           if (err) { return done(err); }
 
-              return done(null, req.user);
-        });
+           if(user){
+             // We have already signed this user up with this login method
+             return done(null, false, { message: 'already connected' })
+           }
+
+             User.findOneAndUpdate({
+                 _id: req.user._id
+               },{
+                 $push: {loginMethods: {provider: "Facebook",id: profile.id}}
+               },
+               function(err){
+                 if(err){
+                   return done(err, false);
+                 }
+                  console.log('Successfully connected facebook to ' + req.user.displayName);
+
+                  return done(null, req.user);
+           })
+
+         });
       }
     }
     ));
@@ -160,8 +163,8 @@ module.exports = function(passport){
       if (!req.user) {
         User.findOrCreate({ "loginMethods.id": profile.id }, {displayName: profile.displayName, loginMethods: {provider: "Twitter",id: profile.id}}, function (err, user) {
           if (err) { return done(err); }
-          
-          return done(err, user); 
+
+          return done(err, user);
 
         });
       } else {
@@ -193,10 +196,16 @@ module.exports = function(passport){
     },
     function(req,accessToken, refreshToken, profile, done) {
       if (!req.user) {
-        User.findOrCreate({ "loginMethods.id": profile.id }, {displayName: profile.displayName, loginMethods: {provider: "Google",id: profile.id}}, function (err, user) {
+        User.findOrCreate({ "loginMethods.id": profile.id }, {
+           displayName: profile.displayName,
+           firstName: profile.name.givenName,
+           lastName: profile.name.familyName,
+           avatar: profile.photo.value,
+           loginMethods: {provider: "Google",id: profile.id}
+        }, function (err, user) {
           if (err) { return done(err); }
-          
-          return done(err, user); 
+
+          return done(err, user);
 
         });
       } else {
@@ -220,7 +229,7 @@ module.exports = function(passport){
 
 
     var isValidPassword = function(user, password){
-        return bCrypt.compareSync(password, user.password);
+      return bCrypt.compareSync(password, user.password);
     };
     // Generates hash using bCrypt
     var createHash = function(password){

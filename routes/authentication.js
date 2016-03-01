@@ -92,7 +92,7 @@ module.exports = function(passport){
         router.get('/connect/facebook/callback',
             passport.authorize('facebook', {
                 successRedirect : '/#',
-                failureRedirect : '/'
+                failureRedirect : '/#'
             }));
 
     // twitter --------------------------------
@@ -103,7 +103,7 @@ module.exports = function(passport){
         // handle the callback after facebook has authorized the user
         router.get('/connect/twitter/callback',
             passport.authorize('twitter', {
-                successRedirect : '/#',
+                successRedirect : '/',
                 failureRedirect : '/'
             }));
 

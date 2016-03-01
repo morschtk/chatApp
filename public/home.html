@@ -37,7 +37,7 @@
     </div>
     <input type="submit" value="Log in" class="ui button blue" />
     <a href="/#/register" class="ui button ">Register</a>
-    <a class="ui facebook button" href="/facebook/callback">
+    <a class="ui facebook button" href="/facebook">
      <i class="facebook icon"></i>
      Facebook
   </a>
@@ -45,7 +45,7 @@
      <i class="twitter icon"></i>
      Twitter
   </a>
-   <a class="ui google plus button" href="/logingoogle">
+   <a class="ui google plus button" href="/google">
      <i class="google plus icon"></i>
      Google Plus
   </a>
@@ -67,21 +67,12 @@
 <!-- authenticated Page -->
 <article class="four wide column" ng-show="authenticated">
   <user-info-box></user-info-box>
-
-   <a class="ui facebook button" href="/connect/facebook">
-     <i class="facebook icon"></i>
-     Twitter
-  </a>
-   <a class="ui google button" href="/facebook/{{current_user.id}}">
-     <i class="google icon"></i>
-     Google
-  </a>
 </article>
 
 <article class="eight wide column" ng-controller="postController" ng-show="authenticated">
    <form class="ui form fluid segment stacked blue" ng-Submit="post()">
      <div class="required field">
-        <h4>{{current_user.displayName}} says {{current_user.id}}</h4>
+        <h4>{{current_user.displayName}} says</h4>
      </div>
      <div class="field">
        <div class="ui icon input">
