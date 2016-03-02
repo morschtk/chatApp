@@ -11,7 +11,10 @@ appAuthentication.controller('authController', function($scope, $rootScope,$http
           $rootScope.current_user = {
              id: data.user.id,
              displayName: data.user.displayName,
-             following: data.user.following
+             following: data.user.following,
+             firstName: data.user.firstName,
+             lastName: data.user.lastName,
+             avatar: data.user.avatar
           };
           $rootScope.current_user.following.push($rootScope.current_user.id);
           $scope.checkSession();
@@ -57,7 +60,10 @@ appAuthentication.controller('authController', function($scope, $rootScope,$http
           $rootScope.current_user = {
              id: data.user.id,
              following: data.user.following,
-             displayName: data.user.displayName
+             displayName: data.user.displayName,
+             firstName: data.user.firstName,
+             lastName: data.user.lastName,
+             avatar: data.user.avatar
           };
           $rootScope.current_user.following.push($rootScope.current_user.id);
         }
