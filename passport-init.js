@@ -115,8 +115,15 @@ module.exports = function(passport){
       passReqToCallback : true
     },
     function(req,accessToken, refreshToken, profile, done) {
+      console.log(profile);
       if (!req.user) {
-        User.findOrCreate({ "loginMethods.id": profile.id }, {displayName: profile.displayName, loginMethods: {provider: "Facebook",id: profile.id}}, function (err, user) {
+        fullName = profile._json.name.split(' ');
+        User.findOrCreate({ "loginMethods.id": profile.id }, {
+           displayName: profile.displayName,
+           firstName: fullName[0],
+           lastName: fullName[1],
+           loginMethods: {provider: "Facebook",id: profile.id}
+        }, function (err, user) {
           if (err) { return done(err); }
 
           return done(err, user);
@@ -161,7 +168,15 @@ module.exports = function(passport){
     },
     function(req, token, tokenSecret, profile, done) {
       if (!req.user) {
-        User.findOrCreate({ "loginMethods.id": profile.id }, {displayName: profile.displayName, loginMethods: {provider: "Twitter",id: profile.id}}, function (err, user) {
+         console.log(profile.name);
+        fullName = profile._json.name.split(' ');
+        User.findOrCreate({ "loginMethods.id": profile.id }, {
+           displayName: profile.username,
+           firstName: fullName[0],
+           lastName: fullName[1],
+           avatar: profile.photos[0].value,
+           loginMethods: {provider: "Twitter",id: profile.id}
+        }, function (err, user) {
           if (err) { return done(err); }
 
           return done(err, user);
@@ -196,11 +211,12 @@ module.exports = function(passport){
     },
     function(req,accessToken, refreshToken, profile, done) {
       if (!req.user) {
+         console.log(profile);
         User.findOrCreate({ "loginMethods.id": profile.id }, {
            displayName: profile.displayName,
            firstName: profile.name.givenName,
            lastName: profile.name.familyName,
-           avatar: profile.photo.value,
+           avatar: profile.photos[0].value,
            loginMethods: {provider: "Google",id: profile.id}
         }, function (err, user) {
           if (err) { return done(err); }
