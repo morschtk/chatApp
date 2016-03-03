@@ -1,4 +1,4 @@
-var app = angular.module('chat-app', ['ngRoute', 'ngResource', 'appSettings', 'appAuthentication', 'appPosts']).run(function($rootScope, $http){
+var app = angular.module('chat-app', ['ngRoute', 'ngResource', 'appServices', 'appSettings', 'appAuthentication', 'appPosts']).run(function($rootScope, $http){
    $rootScope.authenticated = false;
    $rootScope.current_user = "";
    $rootScope.id = "";

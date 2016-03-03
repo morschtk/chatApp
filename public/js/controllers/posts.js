@@ -1,22 +1,25 @@
-var appPosts = angular.module('appPosts', []);
+var appPosts = angular.module('appPosts', ['appServices']);
 
-appPosts.controller('postController', function($scope, $rootScope, postService, followService, unfollowService, getFeed){
-  // getFeed.get({id: $rootScope.current_user.id}, function(result) {
-  //   $rootScope.current_user = result.current_user;
-  //   $scope.posts = result.allPosts;
-  // });
+appPosts.controller('postController', function($scope, $rootScope, postService, followService, unfollowService, getFeed, currentUserService){
   $scope.newPost = {created_by: '', text: ''};
+console.log('hey');
+  if (currentUserService.getAuthenticated()) {
+    getFeed.get({id: currentUserService.getUserId()}, function(result) {
+      currentUserService.setFollowing(result.current_user.following);
+      currentUserService.setPosts(result.allPosts);
+      $scope.posts = currentUserService.getPosts();
+    });
+  }
 
   $scope.post = function() {
-    $scope.newPost.created_by = $rootScope.current_user.id;
+    $scope.newPost.created_by = currentUserService.getUserId();
     postService.save($scope.newPost, function(){
       $scope.newPost = {created_by: '', text: ''};
     });
-    getFeed.get({id: $rootScope.current_user.id}, function(result) {
-      $rootScope.current_user = result.current_user;
-      $rootScope.current_user.id = $rootScope.current_user._id;
-      delete $rootScope.current_user._id;
-      $scope.posts = result.allPosts;
+    getFeed.get({id: currentUserService.getUserId()}, function(result) {
+      currentUserService.setFollowing(result.current_user.following);
+      currentUserService.setPosts(result.allPosts);
+      $scope.posts = currentUserService.getPosts();
     });
   };
 
@@ -26,9 +29,8 @@ appPosts.controller('postController', function($scope, $rootScope, postService, 
 
   $scope.checkFollows = function(id){
     var checkedOut = true;
-    for(var i = 0; i < $rootScope.current_user.following.length; i++){
-      //If current user doesn't follow id then checked out equals true
-      if(id == $rootScope.current_user.following[i]._id){
+    for(var i = 0; i < currentUserService.getFollowing().length; i++){
+      if(id == currentUserService.getFollowing()[i]._id){
         checkedOut = false;
       }
     }
@@ -37,55 +39,21 @@ appPosts.controller('postController', function($scope, $rootScope, postService, 
 
   $scope.followUser = function(userId) {
     var userToFollow = {_id: userId};
-    followService.update({id: $rootScope.current_user.id}, userToFollow);
-    // $rootScope.current_user.following.push(userId);
-    // $scope.posts = getFeed.query({id: $rootScope.current_user.id});
-    getFeed.get({id: $rootScope.current_user.id}, function(result) {
-      $rootScope.current_user = result.current_user;
-      $rootScope.current_user.id = $rootScope.current_user._id;
-      delete $rootScope.current_user._id;
-      $scope.posts = result.allPosts;
+    followService.update({id: currentUserService.getUserId()}, userToFollow);
+    getFeed.get({id: currentUserService.getUserId()}, function(result) {
+      currentUserService.setFollowing(result.current_user.following);
+      currentUserService.setPosts(result.allPosts);
+      $scope.posts = currentUserService.getPosts();
     });
   };
 
   $scope.unfollowUser = function(userId) {
     var userToUnfollow = {_id: userId};
-    unfollowService.update({id: $rootScope.current_user.id}, userToUnfollow);
-    // var index = $rootScope.current_user.following.indexOf(userId);
-    // if (index > -1) {
-    //   $rootScope.current_user.following.splice(index, 1);
-    // }
-    // $scope.posts = getFeed.query({id: $rootScope.current_user.id});
-    getFeed.get({id: $rootScope.current_user.id}, function(result) {
-      $rootScope.current_user = result.current_user;
-      $rootScope.current_user.id = $rootScope.current_user._id;
-      delete $rootScope.current_user._id;
-      $scope.posts = result.allPosts;
+    unfollowService.update({id: currentUserService.getUserId()}, userToUnfollow);
+    getFeed.get({id: currentUserService.getUserId()}, function(result) {
+      currentUserService.setFollowing(result.current_user.following);
+      currentUserService.setPosts(result.allPosts);
+      $scope.posts = currentUserService.getPosts();
     });
   };
-});
-
-appPosts.factory('postService', function($resource){
-  return $resource('/api/posts/:id');
-});
-
-app.factory('followService', function($resource) {
-  return $resource('/api/follow/:id', null,
-    {
-      'update': {method: 'put' }
-    });
-});
-
-app.factory('unfollowService', function($resource) {
-  return $resource('/api/unfollow/:id', null,
-    {
-       'update': {method: 'put' }
-     });
- });
-
-app.factory('getFeed', function($resource) {
-  return $resource('/api/theFeed/:id', null,
-    {
-      'update': {method: 'put' }
-    });
 });

@@ -24,7 +24,7 @@ module.exports = function(passport){
 
     passport.deserializeUser(function(id, done) {
    	User.findById(id, function(err, user) {
-   		console.log('deserializing user:', user.username);
+   		// console.log('deserializing user:', user.username);
    		done(err, user);
    	});
    });
@@ -33,8 +33,10 @@ module.exports = function(passport){
          passReqToCallback : true
      },
      function(req, username, password, done) {
+      console.log('YOOOOO', username);
         if (!req.user) {
           // Check if user exists
+          console.log(username);
           User.findOne({"email": username}, function(err, user){
             if(err){
                return done(err);
