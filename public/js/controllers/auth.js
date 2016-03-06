@@ -1,6 +1,6 @@
 var appAuthentication = angular.module("appAuthentication", ['appServices']);
 
-appAuthentication.controller('authController', function($scope, $rootScope,$http, $location, $route, currentUserService){
+appAuthentication.controller('authController', function($scope, $rootScope,$http, $location, currentUserService){
    $scope.user = {username: '', password: ''};
    $scope.error_message = '';
 
@@ -41,10 +41,13 @@ appAuthentication.controller('authController', function($scope, $rootScope,$http
             $scope.currUserId = currentUserService.getUserId;
             $scope.currDisplayName = currentUserService.getDisplayName;
             $scope.currFollowing = currentUserService.getFollowing;
-
+            // $rootScope.current_user.following.push($rootScope.current_user.id);
+            $scope.checkSession();
+            // var intID = window.setInterval(function() {
+            //   console.log('interval');
+            //   $location.path('/');
+            // }, 3000);
             $location.path('/');
-            console.log($scope.authenticated());
-            console.log($scope.currDisplayName());
          }
          else{
            $scope.error_message = data.message;
