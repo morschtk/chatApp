@@ -1,6 +1,6 @@
 
 <!-- Slash Page -->
-<div class="ui grid" ng-if="!authenticated()">
+<div class="ui grid" ng-show="!authenticated()">
 <article class="six wide column">
    <h2 class="ui header">
       <div class="sub header">Hello There</div>
@@ -69,7 +69,7 @@
   <user-info-box></user-info-box>
 </article>
 
-<article class="eight wide column" ng-controller="postController" ng-if="authenticated()">
+<article class="eight wide column" ng-controller="postController" ng-show="authenticated()">
    <form class="ui form fluid segment stacked blue" ng-Submit="post()">
      <div class="required field">
         <h4>{{currDisplayName()}} says</h4>

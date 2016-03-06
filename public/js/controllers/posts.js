@@ -4,6 +4,7 @@ appPosts.controller('postController', function($scope, $rootScope, postService, 
   $scope.newPost = {created_by: '', text: ''};
 console.log('hey');
   if (currentUserService.getAuthenticated()) {
+    console.log(currentUserService.getUserId());
     getFeed.get({id: currentUserService.getUserId()}, function(result) {
       currentUserService.setFollowing(result.current_user.following);
       currentUserService.setPosts(result.allPosts);
