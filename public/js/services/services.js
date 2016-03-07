@@ -33,6 +33,8 @@ appServices.factory('currentUserService', function() {
     var followers = [];
     var posts = [];
     var avatar = "";
+    var firstName = "";
+    var lastName = "";
 
     return {
     	getAuthenticated: function() {
@@ -76,6 +78,18 @@ appServices.factory('currentUserService', function() {
         },
         setAvatar: function(value) {
             avatar = value;
+        },
+        getFirstName: function() {
+            return firstName;
+        },
+        setFirstName: function(value) {
+            firstName = value;
+        },
+        getLastName: function() {
+            return lastName;
+        },
+        setLastName: function(value) {
+            lastName = value;
         }
     };
 });

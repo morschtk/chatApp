@@ -3,14 +3,13 @@ var appPosts = angular.module('appPosts', ['appServices']);
 appPosts.controller('postController', function($scope, $rootScope, postService, followService, unfollowService, getFeed, currentUserService){
   $scope.newPost = {created_by: '', text: ''};
   $scope.currUserId = currentUserService.getUserId;
+  $scope.currAvatar = currentUserService.getAvatar;
+  $scope.currDisplayName = currentUserService.getDisplayName;
   $scope.currFollowing = [];
 
   getFeed.get({id: $scope.currUserId()}, function(result) {
     currentUserService.setFollowing(result.current_user.following);
     $scope.currFollowing = currentUserService.getFollowing;
-
-    currentUserService.setDisplayName(result.current_user.displayName);
-    $scope.currDisplayName = currentUserService.getDisplayName;
 
     currentUserService.setPosts(result.allPosts);
     $scope.posts = currentUserService.getPosts();

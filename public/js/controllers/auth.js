@@ -11,6 +11,10 @@ appAuthentication.controller('authController', function($scope, $rootScope,$http
           $scope.user = {username: '', password: ''};
           currentUserService.setAuthenticated(true);
           currentUserService.setUserId(data.user.id);
+          currentUserService.setAvatar(data.user.avatar);
+          currentUserService.setDisplayName(data.user.displayName);
+          currentUserService.setFirstName(data.user.firstName);
+          currentUserService.setLastName(data.user.lastName);
 
           $scope.authenticated = currentUserService.getAuthenticated;
 
@@ -28,6 +32,10 @@ appAuthentication.controller('authController', function($scope, $rootScope,$http
           $scope.user = {username: '', password: ''};
             currentUserService.setAuthenticated(true);
             currentUserService.setUserId(data.user.id);
+            currentUserService.setAvatar(data.user.avatar);
+            currentUserService.setDisplayName(data.user.displayName);
+            currentUserService.setFirstName(data.user.firstName);
+            currentUserService.setLastName(data.user.lastName);
 
             $scope.authenticated = currentUserService.getAuthenticated;
 
@@ -59,6 +67,10 @@ appAuthentication.controller('authController', function($scope, $rootScope,$http
         if(data.state == 'success' && data.user){
           currentUserService.setAuthenticated(true);
           currentUserService.setUserId(data.user.id);
+          currentUserService.setAvatar(data.user.avatar);
+          currentUserService.setDisplayName(data.user.displayName);
+          currentUserService.setFirstName(data.user.firstName);
+          currentUserService.setLastName(data.user.lastName);
 
           $scope.authenticated = currentUserService.getAuthenticated;
         }
