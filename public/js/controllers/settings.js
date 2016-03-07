@@ -2,6 +2,7 @@ var appSettings = angular.module("appSettings", ['appServices']);
 
 appSettings.controller('settingsController', [ '$scope', '$rootScope', '$http', '$location', 'currentUserService', function($scope, $rootScope, $http, $location, currentUserService) {
   $scope.tab = "personal";
+  $scope.currUserPosts = currentUserService.getCurrUserPosts;
   $scope.currFollowing = currentUserService.getFollowing;
   $scope.currFollowers = currentUserService.getFollowers;
   $scope.currDisplayName = currentUserService.getDisplayName;

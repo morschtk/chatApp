@@ -35,6 +35,7 @@ appServices.factory('currentUserService', function() {
     var avatar = "";
     var firstName = "";
     var lastName = "";
+    var currUserPosts = [];
 
     return {
     	getAuthenticated: function() {
@@ -90,6 +91,12 @@ appServices.factory('currentUserService', function() {
         },
         setLastName: function(value) {
             lastName = value;
+        },
+        getCurrUserPosts: function() {
+            return currUserPosts;
+        },
+        setCurrUserPosts: function(value) {
+            currUserPosts = value;
         }
     };
 });

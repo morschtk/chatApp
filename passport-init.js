@@ -24,7 +24,7 @@ module.exports = function(passport){
 
     passport.deserializeUser(function(id, done) {
    	User.findById(id, function(err, user) {
-   		// console.log('deserializing user:', user.username);
+   		console.log('deserializing user:', user.username);
    		done(err, user);
    	});
    });
@@ -33,10 +33,8 @@ module.exports = function(passport){
          passReqToCallback : true
      },
      function(req, username, password, done) {
-      console.log('YOOOOO', username);
         if (!req.user) {
           // Check if user exists
-          console.log(username);
           User.findOne({"email": username}, function(err, user){
             if(err){
                return done(err);
@@ -117,7 +115,6 @@ module.exports = function(passport){
       passReqToCallback : true
     },
     function(req,accessToken, refreshToken, profile, done) {
-      console.log(profile);
       if (!req.user) {
         fullName = profile._json.name.split(' ');
         User.findOrCreate({ "loginMethods.id": profile.id }, {
@@ -170,7 +167,6 @@ module.exports = function(passport){
     },
     function(req, token, tokenSecret, profile, done) {
       if (!req.user) {
-         console.log(profile.name);
         fullName = profile._json.name.split(' ');
         User.findOrCreate({ "loginMethods.id": profile.id }, {
            displayName: profile.username,
@@ -213,7 +209,6 @@ module.exports = function(passport){
     },
     function(req,accessToken, refreshToken, profile, done) {
       if (!req.user) {
-         console.log(profile);
         User.findOrCreate({ "loginMethods.id": profile.id }, {
            displayName: profile.displayName,
            firstName: profile.name.givenName,

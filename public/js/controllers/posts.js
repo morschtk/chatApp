@@ -7,26 +7,29 @@ appPosts.controller('postController', function($scope, $rootScope, postService, 
   $scope.currDisplayName = currentUserService.getDisplayName;
   $scope.currFollowing = [];
 
-  getFeed.get({id: $scope.currUserId()}, function(result) {
-    currentUserService.setFollowing(result.current_user.following);
-    $scope.currFollowing = currentUserService.getFollowing;
+  function getCurrUserInfo() {
+    getFeed.get({id: $scope.currUserId()}, function(result) {
+      currentUserService.setFollowing(result.current_user.following);
+      $scope.currFollowing = currentUserService.getFollowing;
 
-    currentUserService.setFollowers(result.current_user.followers);
-    $scope.currFollowers = currentUserService.getFollowers;
+      currentUserService.setFollowers(result.current_user.followers);
+      $scope.currFollowers = currentUserService.getFollowers;
 
-    currentUserService.setPosts(result.allPosts);
-    $scope.posts = currentUserService.getPosts();
-  });
+      currentUserService.setCurrUserPosts(result.current_user.posts);
+      $scope.currUserPosts = currentUserService.getCurrUserPosts;
+
+      currentUserService.setPosts(result.allPosts);
+      $scope.posts = currentUserService.getPosts();
+    });
+  }
+  getCurrUserInfo();
 
   $scope.post = function() {
     $scope.newPost.created_by = $scope.currUserId();
     postService.save($scope.newPost, function(){
       $scope.newPost = {created_by: '', text: ''};
     });
-    getFeed.get({id: $scope.currUserId()}, function(result) {
-      currentUserService.setPosts(result.allPosts);
-      $scope.posts = currentUserService.getPosts();
-    });
+    getCurrUserInfo();
   };
 
   $scope.getAllPosts = function() {
@@ -46,22 +49,12 @@ appPosts.controller('postController', function($scope, $rootScope, postService, 
   $scope.followUser = function(userId) {
     var userToFollow = {_id: userId};
     followService.update({id: $scope.currUserId()}, userToFollow);
-    getFeed.get({id: $scope.currUserId()}, function(result) {
-      currentUserService.setFollowing(result.current_user.following);
-      $scope.currFollowing = currentUserService.getFollowing;
-      currentUserService.setPosts(result.allPosts);
-      $scope.posts = currentUserService.getPosts();
-    });
+    getCurrUserInfo();
   };
 
   $scope.unfollowUser = function(userId) {
     var userToUnfollow = {_id: userId};
     unfollowService.update({id: $scope.currUserId()}, userToUnfollow);
-    getFeed.get({id: $scope.currUserId()}, function(result) {
-      currentUserService.setFollowing(result.current_user.following);
-      $scope.currFollowing = currentUserService.getFollowing;
-      currentUserService.setPosts(result.allPosts);
-      $scope.posts = currentUserService.getPosts();
-    });
+    getCurrUserInfo();
   };
 });

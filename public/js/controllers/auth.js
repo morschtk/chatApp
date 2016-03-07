@@ -17,12 +17,14 @@ appAuthentication.controller('authController', function($scope, $rootScope,$http
           currentUserService.setLastName(data.user.lastName);
           currentUserService.setFollowing(data.user.following);
           currentUserService.setFollowers(data.user.followers);
+          currentUserService.setCurrUserPosts(data.user.posts);
 
           $scope.authenticated = currentUserService.getAuthenticated;
           $scope.currDisplayName = currentUserService.getDisplayName;
           $scope.currFollowing = currentUserService.getFollowing;
           $scope.currFollowers = currentUserService.getFollowers;
           $scope.currAvatar = currentUserService.getAvatar;
+          $scope.currUserPosts = currentUserService.getCurrUserPosts;
 
           $location.path('/');
         }
@@ -44,12 +46,14 @@ appAuthentication.controller('authController', function($scope, $rootScope,$http
             currentUserService.setLastName(data.user.lastName);
             currentUserService.setFollowing(data.user.following);
             currentUserService.setFollowers(data.user.followers);
+            currentUserService.setCurrUserPosts(data.user.posts);
 
             $scope.authenticated = currentUserService.getAuthenticated;
             $scope.currDisplayName = currentUserService.getDisplayName;
             $scope.currFollowing = currentUserService.getFollowing;
             $scope.currFollowers = currentUserService.getFollowers;
             $scope.currAvatar = currentUserService.getAvatar;
+            $scope.currUserPosts = currentUserService.getCurrUserPosts;
 
             $location.path('/');
          }
@@ -85,12 +89,14 @@ appAuthentication.controller('authController', function($scope, $rootScope,$http
           currentUserService.setLastName(data.user.lastName);
           currentUserService.setFollowing(data.user.following);
           currentUserService.setFollowers(data.user.followers);
+          currentUserService.setCurrUserPosts(data.user.posts);
 
           $scope.authenticated = currentUserService.getAuthenticated;
           $scope.currDisplayName = currentUserService.getDisplayName;
           $scope.currFollowing = currentUserService.getFollowing;
           $scope.currFollowers = currentUserService.getFollowers;
           $scope.currAvatar = currentUserService.getAvatar;
+          $scope.currUserPosts = currentUserService.getCurrUserPosts;
         }
       });
    };

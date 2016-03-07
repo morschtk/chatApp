@@ -106,7 +106,6 @@ router.route('/theFeed/:id')
           current_user: current_user,
           allPosts: allPosts
         };
-        user_allPosts.current_user.posts = [];
         res.json(user_allPosts);
       });
    });
