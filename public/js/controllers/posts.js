@@ -11,6 +11,9 @@ appPosts.controller('postController', function($scope, $rootScope, postService, 
     currentUserService.setFollowing(result.current_user.following);
     $scope.currFollowing = currentUserService.getFollowing;
 
+    currentUserService.setFollowers(result.current_user.followers);
+    $scope.currFollowers = currentUserService.getFollowers;
+
     currentUserService.setPosts(result.allPosts);
     $scope.posts = currentUserService.getPosts();
   });

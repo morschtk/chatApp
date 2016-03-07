@@ -15,8 +15,14 @@ appAuthentication.controller('authController', function($scope, $rootScope,$http
           currentUserService.setDisplayName(data.user.displayName);
           currentUserService.setFirstName(data.user.firstName);
           currentUserService.setLastName(data.user.lastName);
+          currentUserService.setFollowing(data.user.following);
+          currentUserService.setFollowers(data.user.followers);
 
           $scope.authenticated = currentUserService.getAuthenticated;
+          $scope.currDisplayName = currentUserService.getDisplayName;
+          $scope.currFollowing = currentUserService.getFollowing;
+          $scope.currFollowers = currentUserService.getFollowers;
+          $scope.currAvatar = currentUserService.getAvatar;
 
           $location.path('/');
         }
@@ -36,8 +42,14 @@ appAuthentication.controller('authController', function($scope, $rootScope,$http
             currentUserService.setDisplayName(data.user.displayName);
             currentUserService.setFirstName(data.user.firstName);
             currentUserService.setLastName(data.user.lastName);
+            currentUserService.setFollowing(data.user.following);
+            currentUserService.setFollowers(data.user.followers);
 
             $scope.authenticated = currentUserService.getAuthenticated;
+            $scope.currDisplayName = currentUserService.getDisplayName;
+            $scope.currFollowing = currentUserService.getFollowing;
+            $scope.currFollowers = currentUserService.getFollowers;
+            $scope.currAvatar = currentUserService.getAvatar;
 
             $location.path('/');
          }
@@ -71,8 +83,14 @@ appAuthentication.controller('authController', function($scope, $rootScope,$http
           currentUserService.setDisplayName(data.user.displayName);
           currentUserService.setFirstName(data.user.firstName);
           currentUserService.setLastName(data.user.lastName);
+          currentUserService.setFollowing(data.user.following);
+          currentUserService.setFollowers(data.user.followers);
 
           $scope.authenticated = currentUserService.getAuthenticated;
+          $scope.currDisplayName = currentUserService.getDisplayName;
+          $scope.currFollowing = currentUserService.getFollowing;
+          $scope.currFollowers = currentUserService.getFollowers;
+          $scope.currAvatar = currentUserService.getAvatar;
         }
       });
    };
