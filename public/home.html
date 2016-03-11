@@ -86,7 +86,7 @@
 
   <h3 class="ui blue header"><i class="ui chat icon"></i>Chat Feed</h3>
     <div class="ui divider"></div>
-    <div class="ui feed message" ng-repeat="post in posts | filter:search | orderBy:'created_at':true" ng-class-odd="'floating teal'" ng-class-even="''">
+    <div class="ui feed message" ng-repeat="post in posts() | filter:search | orderBy:'created_at':true" ng-class-odd="'floating teal'" ng-class-even="''">
       <div class="event">
         <div class="content">
           <div class="summary">
@@ -97,13 +97,30 @@
             <div class="date">
              {{(post.created_at) | date:"h:mma 'on' MMM d, y"}}
             </div>
+            <div ng-if="editingPost === post" style="display: inline-block; float: right;" ng-click="cancel(post)">
+              <i class="remove icon" style="margin:0px;"></i>
+            </div>
             <br>
             <div ng-if="post.user_id !== currUserId()">
               <a ng-if="checkFollows(post.user_id)" ng-click="followUser(post.user_id)">Follow {{post.created_by}}</a>
               <a ng-if="!checkFollows(post.user_id)" ng-click="unfollowUser(post.user_id)">Unfollow {{post.created_by}}</a>
               <br>
             </div>
-            {{post.text}}<br>
+            <div ng-if="editingPost !== post">
+              {{post.text}}
+            </div>
+            <div ng-if="editingPost === post">
+              <div class="ui form">
+                <div class="field">
+                  <textarea rows="2" ng-model="post.text"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div ng-if="post.user_id === currUserId()" style="margin-top: 5px;">
+            <button class="mini ui blue button" ng-if="editingPost !== post" ng-click="edit(post)">Edit</button>
+            <button class="mini ui green button" ng-if="editingPost === post" ng-click="save(post)">Save</button>
+            <button class="mini ui red button" ng-click="delete(post)">Delete</button>
           </div>
         </div>
       </div>

@@ -108,7 +108,21 @@ router.route('/theFeed/:id')
         };
         res.json(user_allPosts);
       });
-   });
+   })
+   //deletes specified post
+	.put(function(req, res) {
+		User.update({
+			"_id": req.params.id
+		}, {
+      $pull: {
+        "posts": { "_id": req.body._id }
+      }
+    }, function(err) {
+			if (err)
+				return res.send(err);
+			res.json("deleted :(");
+		});
+	});
 
 // Api for a specfic post
 router.route('/posts/:id')
@@ -137,6 +151,24 @@ router.route('/posts/:id')
           res.json(User);
       });
     })
+
+    //updates specified post
+	.put(function(req, res){
+		User.update({
+			"posts._id": req.params.id
+		},{
+			$set: {
+				"posts.$.text": req.body.text
+				// "posts.$.likes": req.body.likes
+			}
+		},
+			function(err, numAffected){
+				if(err)
+					return res.send(err);
+
+				res.json(numAffected);
+		});
+	})
 
     // Delete the current post
     .delete(function(req,res){

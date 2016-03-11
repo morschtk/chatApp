@@ -6,6 +6,8 @@ appPosts.controller('postController', function($scope, $rootScope, postService, 
   $scope.currAvatar = currentUserService.getAvatar;
   $scope.currDisplayName = currentUserService.getDisplayName;
   $scope.currFollowing = [];
+  $scope.editingPost = {};
+  var oldPostText = "";
 
   function getCurrUserInfo() {
     getFeed.get({id: $scope.currUserId()}, function(result) {
@@ -19,7 +21,7 @@ appPosts.controller('postController', function($scope, $rootScope, postService, 
       $scope.currUserPosts = currentUserService.getCurrUserPosts;
 
       currentUserService.setPosts(result.allPosts);
-      $scope.posts = currentUserService.getPosts();
+      $scope.posts = currentUserService.getPosts;
     });
   }
   getCurrUserInfo();
@@ -32,8 +34,32 @@ appPosts.controller('postController', function($scope, $rootScope, postService, 
     getCurrUserInfo();
   };
 
+  $scope.edit = function(post) {
+    $scope.editingPost = post;
+    oldPostText = post.text;
+  };
+
+  $scope.save = function(post) {
+    $scope.editingPost = {};
+    postService.update({id: post._id}, post);
+  };
+
+  $scope.cancel = function(post) {
+    var index = $scope.posts().indexOf(post);
+    $scope.posts()[index].text = oldPostText;
+    $scope.editingPost = {};
+  };
+
+  $scope.delete = function(post) {
+    $scope.posts().splice($scope.posts().indexOf(post), 1);
+    $scope.currUserPosts().splice($scope.currUserPosts().indexOf(post), 1);
+    $scope.editingPost = {};
+    getFeed.update({id: post.user_id}, post);
+  };
+
   $scope.getAllPosts = function() {
-    $scope.posts = postService.query();
+    currentUserService.setPosts(postService.query());
+    $scope.posts = currentUserService.getPosts;
   };
 
   $scope.checkFollows = function(id){

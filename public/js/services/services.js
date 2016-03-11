@@ -1,7 +1,10 @@
 var appServices = angular.module("appServices", ['ngResource']);
 
 appServices.factory('postService', function($resource){
-  return $resource('/api/posts/:id');
+  return $resource('/api/posts/:id', null,
+    {
+      'update': {method: 'put' }
+    });
 });
 
 appServices.factory('followService', function($resource) {
