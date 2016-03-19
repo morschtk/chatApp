@@ -58,12 +58,21 @@ router.route('/posts')
         _id: req.body.created_by
       },{
         $push: {posts: { text: req.body.text}}
+      },{
+        new: true
       },
-      function(err){
+      function(err, user){
         if(err){
           return res.send(err);
         }
-        res.json(User);
+        var newPost = {
+          text : user.posts[user.posts.length - 1].text,
+          created_at : user.posts[user.posts.length - 1].created_at,
+          _id : user.posts[user.posts.length - 1]._id,
+          user_id : user._id,
+          created_by : user.displayName
+        };
+        return res.json(newPost);
       });
    });
 
@@ -101,6 +110,7 @@ router.route('/theFeed/:id')
             };
             allPosts.push(post);
           }
+          current_user.following[i] = current_user.following[i]._id;
         }
         var user_allPosts = {
           current_user: current_user,
@@ -123,6 +133,36 @@ router.route('/theFeed/:id')
 			res.json("deleted :(");
 		});
 	});
+
+// Get a specific users info
+router.route('/theDisplayFeed/:id')
+  .get(function(req, res) {
+    User.findOne({ _id: req.params.id }, { password: 0}, function(err, display_user) {
+        if (err) {
+          console.log('Error getting display feed. ', err);
+          return res.json(err);
+        }
+
+        var allPosts = [];
+
+        for (var i = 0; i < display_user.posts.length; i++) {
+          var post = {
+            user_id: display_user._id,
+            created_by: display_user.displayName,
+            text: display_user.posts[i].text,
+            created_at: display_user.posts[i].created_at,
+            _id: display_user.posts[i]._id
+          };
+          allPosts.push(post);
+        }
+
+        var user_allPosts = {
+          display_user: display_user,
+          allPosts: allPosts
+        };
+        res.json(user_allPosts);
+      });
+  });
 
 // Api for a specfic post
 router.route('/posts/:id')
@@ -231,7 +271,7 @@ router.route('/unfollow/:id')
       User.update({
         _id: req.body._id
       },{
-        $pull: { followers: req.params._id }
+        $pull: { followers: req.params.id }
       },{
         upsert: true
       }, function(err) {

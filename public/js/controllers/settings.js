@@ -2,13 +2,11 @@ var appSettings = angular.module("appSettings", ['appServices']);
 
 appSettings.controller('settingsController', [ '$scope', '$rootScope', '$http', '$location', 'currentUserService', function($scope, $rootScope, $http, $location, currentUserService) {
   $scope.tab = "personal";
-  $scope.currUserPosts = currentUserService.getCurrUserPosts;
-  $scope.currFollowing = currentUserService.getFollowing;
-  $scope.currFollowers = currentUserService.getFollowers;
-  $scope.currDisplayName = currentUserService.getDisplayName;
-  $scope.currAvatar = currentUserService.getAvatar;
-  $scope.currFirstName = currentUserService.getFirstName;
-  $scope.currLastName = currentUserService.getLastName;
+  $scope.displayUserPosts = currentUserService.getCurrUserPosts();
+  $scope.displayFollowing = currentUserService.getFollowing();
+  $scope.displayFollowers = currentUserService.getFollowers();
+  $scope.displayDisplayName = currentUserService.getDisplayName();
+  $scope.displayAvatar = currentUserService.getAvatar();
 
   $scope.selectTab = function(currentTab){
     $scope.tab = currentTab;

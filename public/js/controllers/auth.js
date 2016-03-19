@@ -1,6 +1,6 @@
 var appAuthentication = angular.module("appAuthentication", ['appServices']);
 
-appAuthentication.controller('authController', function($scope, $rootScope,$http, $location, currentUserService){
+appAuthentication.controller('authController', function($scope, $rootScope,$http, $location, $route, currentUserService){
    $scope.user = {username: '', password: ''};
    $scope.error_message = '';
    $scope.authenticated = currentUserService.getAuthenticated;
@@ -11,20 +11,13 @@ appAuthentication.controller('authController', function($scope, $rootScope,$http
           $scope.user = {username: '', password: ''};
           currentUserService.setAuthenticated(true);
           currentUserService.setUserId(data.user.id);
-          currentUserService.setAvatar(data.user.avatar);
-          currentUserService.setDisplayName(data.user.displayName);
-          currentUserService.setFirstName(data.user.firstName);
-          currentUserService.setLastName(data.user.lastName);
           currentUserService.setFollowing(data.user.following);
-          currentUserService.setFollowers(data.user.followers);
           currentUserService.setCurrUserPosts(data.user.posts);
 
           $scope.authenticated = currentUserService.getAuthenticated;
-          $scope.currDisplayName = currentUserService.getDisplayName;
-          $scope.currFollowing = currentUserService.getFollowing;
-          $scope.currFollowers = currentUserService.getFollowers;
-          $scope.currAvatar = currentUserService.getAvatar;
-          $scope.currUserPosts = currentUserService.getCurrUserPosts;
+          $scope.currUserId = currentUserService.getUserId();
+          $scope.currFollowing = currentUserService.getFollowing();
+          $scope.currUserPosts = currentUserService.getCurrUserPosts();
 
           $location.path('/');
         }
@@ -40,20 +33,13 @@ appAuthentication.controller('authController', function($scope, $rootScope,$http
           $scope.user = {username: '', password: ''};
             currentUserService.setAuthenticated(true);
             currentUserService.setUserId(data.user.id);
-            currentUserService.setAvatar(data.user.avatar);
-            currentUserService.setDisplayName(data.user.displayName);
-            currentUserService.setFirstName(data.user.firstName);
-            currentUserService.setLastName(data.user.lastName);
             currentUserService.setFollowing(data.user.following);
-            currentUserService.setFollowers(data.user.followers);
             currentUserService.setCurrUserPosts(data.user.posts);
 
             $scope.authenticated = currentUserService.getAuthenticated;
-            $scope.currDisplayName = currentUserService.getDisplayName;
-            $scope.currFollowing = currentUserService.getFollowing;
-            $scope.currFollowers = currentUserService.getFollowers;
-            $scope.currAvatar = currentUserService.getAvatar;
-            $scope.currUserPosts = currentUserService.getCurrUserPosts;
+            $scope.currUserId = currentUserService.getUserId();
+            $scope.currFollowing = currentUserService.getFollowing();
+            $scope.currUserPosts = currentUserService.getCurrUserPosts();
 
             $location.path('/');
          }
@@ -63,7 +49,7 @@ appAuthentication.controller('authController', function($scope, $rootScope,$http
       });
    };
 
-   $scope.logout=  function(){
+   $scope.logout =  function(){
       $http.get('/logout', $scope.user).success(function(data){
         currentUserService.setAuthenticated(false);
         currentUserService.setUserId('');
@@ -71,10 +57,11 @@ appAuthentication.controller('authController', function($scope, $rootScope,$http
         currentUserService.setFollowing([]);
 
         $scope.authenticated = currentUserService.getAuthenticated;
-        $scope.currUserId = currentUserService.getUserId;
-        $scope.currDisplayName = currentUserService.getDisplayName;
-        $scope.currFollowing = currentUserService.getFollowing;
+        $scope.currUserId = currentUserService.getUserId();
+        $scope.currDisplayName = currentUserService.getDisplayName();
+        $scope.currFollowing = currentUserService.getFollowing();
         $location.path('/');
+        $route.reload();
       });
    };
 
@@ -83,20 +70,13 @@ appAuthentication.controller('authController', function($scope, $rootScope,$http
         if(data.state == 'success' && data.user){
           currentUserService.setAuthenticated(true);
           currentUserService.setUserId(data.user.id);
-          currentUserService.setAvatar(data.user.avatar);
-          currentUserService.setDisplayName(data.user.displayName);
-          currentUserService.setFirstName(data.user.firstName);
-          currentUserService.setLastName(data.user.lastName);
           currentUserService.setFollowing(data.user.following);
-          currentUserService.setFollowers(data.user.followers);
           currentUserService.setCurrUserPosts(data.user.posts);
 
           $scope.authenticated = currentUserService.getAuthenticated;
-          $scope.currDisplayName = currentUserService.getDisplayName;
-          $scope.currFollowing = currentUserService.getFollowing;
-          $scope.currFollowers = currentUserService.getFollowers;
-          $scope.currAvatar = currentUserService.getAvatar;
-          $scope.currUserPosts = currentUserService.getCurrUserPosts;
+          $scope.currUserId = currentUserService.getUserId();
+          $scope.currFollowing = currentUserService.getFollowing();
+          $scope.currUserPosts = currentUserService.getCurrUserPosts();
         }
       });
    };

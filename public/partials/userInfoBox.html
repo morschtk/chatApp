@@ -1,8 +1,7 @@
 <div class="ui segment stacked blue">
   <h3 class="ui header">
-     <img ng-src="{{currAvatar() || 'http://wallpapercave.com/wp/qi6CA4t.png'}}" class="ui image tiny floated left">
-     <a href="/#/user/{{currDisplayName()}}">{{currDisplayName()}}</a>
-     <div class="sub header floated right">{{currFirstName() + ' ' + currLastName()}}</div>
+     <img ng-src="{{displayAvatar || 'http://wallpapercave.com/wp/qi6CA4t.png'}}" class="ui image tiny floated left">
+     <a href="/#/user/{{displayDisplayName}}">{{displayDisplayName}}</a>
   </h3>
   <br><br>
   <br>
@@ -11,26 +10,23 @@
        Tweets
      </div>
      <div class="value">
-       {{currUserPosts().length}}
+       {{displayUserPosts.length}}
      </div>
-
    </div>
-     <div class="ui mini statistic floated">
-
-       <div class="label">
-        Following
-       </div>
-       <div class="value">
-        {{currFollowing().length}}
-       </div>
+   <div class="ui mini statistic floated">
+     <div class="label">
+      Following
      </div>
-     <div class="ui mini statistic floated">
-
-       <div class="label">
-        Followers
-       </div>
-       <div class="value">
-        {{currFollowers().length}}
-       </div>
+     <div class="value">
+      {{displayFollowing.length}}
      </div>
+   </div>
+   <div class="ui mini statistic floated">
+     <div class="label">
+      Followers
+     </div>
+     <div class="value">
+      {{displayFollowers.length}}
+     </div>
+   </div>
 </div>

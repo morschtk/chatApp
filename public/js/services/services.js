@@ -28,6 +28,13 @@ appServices.factory('getFeed', function($resource) {
     });
 });
 
+appServices.factory('getDisplayFeed', function($resource) {
+  return $resource('/api/theDisplayFeed/:id', null,
+    {
+      'update': {method: 'put' }
+    });
+});
+
 appServices.factory('currentUserService', function() {
     var authenticated = false;
     var userId = "";
@@ -47,59 +54,59 @@ appServices.factory('currentUserService', function() {
     	setAuthenticated: function(value) {
     	    authenticated = value;
     	},
-        getUserId: function() {
-            return userId;
-        },
-        setUserId: function(value) {
-            userId = value;
-        },
-        getDisplayName: function() {
-            return displayName;
-        },
-        setDisplayName: function(value) {
-            displayName = value;
-        },
-        getFollowing: function() {
-            return following;
-        },
-        setFollowing: function(value) {
-            following = value;
-        },
-        getFollowers: function() {
-            return followers;
-        },
-        setFollowers: function(value) {
-            followers = value;
-        },
-        getPosts: function() {
-            return posts;
-        },
-        setPosts: function(value) {
-            posts = value;
-        },
-        getAvatar: function() {
-            return avatar;
-        },
-        setAvatar: function(value) {
-            avatar = value;
-        },
-        getFirstName: function() {
-            return firstName;
-        },
-        setFirstName: function(value) {
-            firstName = value;
-        },
-        getLastName: function() {
-            return lastName;
-        },
-        setLastName: function(value) {
-            lastName = value;
-        },
-        getCurrUserPosts: function() {
-            return currUserPosts;
-        },
-        setCurrUserPosts: function(value) {
-            currUserPosts = value;
-        }
-    };
+      getUserId: function() {
+          return userId;
+      },
+      setUserId: function(value) {
+          userId = value;
+      },
+      getDisplayName: function() {
+          return displayName;
+      },
+      setDisplayName: function(value) {
+          displayName = value;
+      },
+      getFollowing: function() {
+          return following;
+      },
+      setFollowing: function(value) {
+          following = value;
+      },
+      getFollowers: function() {
+          return followers;
+      },
+      setFollowers: function(value) {
+          followers = value;
+      },
+      getPosts: function() {
+          return posts;
+      },
+      setPosts: function(value) {
+          posts = value;
+      },
+      getAvatar: function() {
+          return avatar;
+      },
+      setAvatar: function(value) {
+          avatar = value;
+      },
+      getFirstName: function() {
+          return firstName;
+      },
+      setFirstName: function(value) {
+          firstName = value;
+      },
+      getLastName: function() {
+          return lastName;
+      },
+      setLastName: function(value) {
+          lastName = value;
+      },
+      getCurrUserPosts: function() {
+          return currUserPosts;
+      },
+      setCurrUserPosts: function(value) {
+          currUserPosts = value;
+      }
+  };
 });
