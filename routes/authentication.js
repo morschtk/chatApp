@@ -17,8 +17,8 @@ module.exports = function(passport){
            id: req.user.id,
            displayName: req.user.displayName,
            following: req.user.following,
-           firstName: req.user.firstName,
-           lastName: req.user.lastName,
+           followers: req.user.followers,
+           posts: req.user.posts,
            avatar: req.user.avatar
         } : ""});
     });

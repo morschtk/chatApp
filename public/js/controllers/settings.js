@@ -1,33 +1,34 @@
-var appSettings = angular.module("appSettings", []);
+var appSettings = angular.module("appSettings", ['appServices']);
 
-appSettings.controller('settingsController', [ '$scope', '$rootScope', '$http', '$location',
-   function($scope, $rootScope, $http, $location) {
+appSettings.controller('settingsController', [ '$scope', '$rootScope', '$http', '$location', 'currentUserService', function($scope, $rootScope, $http, $location, currentUserService) {
+  $scope.tab = "personal";
+  $scope.displayUserPosts = currentUserService.getCurrUserPosts();
+  $scope.displayFollowing = currentUserService.getFollowing();
+  $scope.displayFollowers = currentUserService.getFollowers();
+  $scope.displayDisplayName = currentUserService.getDisplayName();
+  $scope.displayAvatar = currentUserService.getAvatar();
 
-   if (!$rootScope.authenticated) {
-      $location.path('/');
-   } else {
-      $scope.tab = "personal";
+  $scope.selectTab = function(currentTab){
+    $scope.tab = currentTab;
+  };
 
-      $scope.selectTab = function(currentTab){
-   		$scope.tab = currentTab;
-   	};
+  $scope.selectImg = function(currentImg){
+    $scope.avatar = currentImg;
+  };
 
-   	$scope.selectImg = function(currentImg){
-   		$scope.avatar = currentImg;
-   	};
+  $scope.isSelected = function(currentTab){
+    return $scope.tab === currentTab;
+  };
 
-   	$scope.isSelected = function(currentTab){
-   		return $scope.tab === currentTab;
-   	};
+  $scope.imgSelected = function(currentAvatar){
+    return $scope.avatar === currentAvatar;
+  };
 
-      $scope.update = function(personal) {
-         console.log(personal);
-         // userService.save($rootScope.current_user, function(){
-         // });
-      };
-   }
+  $scope.connectTwitter = function() {
+    console.log('running this');
+    $http.get('/connect/twitter', $rootScope.id).success(function(data) {
+      $location.path('.');
+      //TODO: add toggles and checks for which accounts are connected
+    });
+  };
 }]);
-
-appPosts.factory('userService', function($resource){
-  return $resource('/api/user/:id');
-});

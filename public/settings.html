@@ -96,7 +96,7 @@
 
         <input class="ui button blue" type="submit" value="Send" id="send" />
      </form>
-     <div class="ui inverted red button" ng-show='authenticated' ng-click="deleteUser(current_user)">Delete Account</div>
+     <div class="ui inverted red button" ng-if='authenticated()' ng-click="deleteUser(current_user)">Delete Account</div>
   </article>
 
   <article ng-show="isSelected('privacy')">

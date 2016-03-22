@@ -116,11 +116,8 @@ module.exports = function(passport){
     },
     function(req,accessToken, refreshToken, profile, done) {
       if (!req.user) {
-        fullName = profile._json.name.split(' ');
         User.findOrCreate({ "loginMethods.id": profile.id }, {
            displayName: profile.displayName,
-           firstName: fullName[0],
-           lastName: fullName[1],
            loginMethods: {provider: "Facebook",id: profile.id}
         }, function (err, user) {
           if (err) { return done(err); }
@@ -167,11 +164,8 @@ module.exports = function(passport){
     },
     function(req, token, tokenSecret, profile, done) {
       if (!req.user) {
-        fullName = profile._json.name.split(' ');
         User.findOrCreate({ "loginMethods.id": profile.id }, {
            displayName: profile.username,
-           firstName: fullName[0],
-           lastName: fullName[1],
            avatar: profile.photos[0].value,
            loginMethods: {provider: "Twitter",id: profile.id}
         }, function (err, user) {
@@ -211,8 +205,6 @@ module.exports = function(passport){
       if (!req.user) {
         User.findOrCreate({ "loginMethods.id": profile.id }, {
            displayName: profile.displayName,
-           firstName: profile.name.givenName,
-           lastName: profile.name.familyName,
            avatar: profile.photos[0].value,
            loginMethods: {provider: "Google",id: profile.id}
         }, function (err, user) {

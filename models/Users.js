@@ -6,10 +6,7 @@ var userSchema = new mongoose.Schema({
    password: String,
    email: String,
    displayName: String,
-   firstName: String,
-   lastName: String,
    avatar: String,
-   bio: String,
    loginMethods: [{
       provider: {type: String, default: "Local"},
       id: String
