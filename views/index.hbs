@@ -14,7 +14,7 @@
           <a class="item" href="#" ng-class="{ active : isSelected('index')}" ng-click="selectedPage('index')">
             <i class="home icon"></i> Home
           </a>
-          <a class="item" href="#/settings" ng-class="{ active : isSelected('settings')}" ng-click="selectedPage('settings')">
+          <a class="item" href="#/settings" ng-show="authenticated" ng-class="{ active : isSelected('settings')}" ng-click="selectedPage('settings')">
             <i class="home icon"></i> Settings
           </a>
 

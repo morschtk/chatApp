@@ -115,7 +115,6 @@ module.exports = function(passport){
       passReqToCallback : true
     },
     function(req,accessToken, refreshToken, profile, done) {
-      console.log(profile);
       if (!req.user) {
         fullName = profile._json.name.split(' ');
         User.findOrCreate({ "loginMethods.id": profile.id }, {
@@ -168,7 +167,6 @@ module.exports = function(passport){
     },
     function(req, token, tokenSecret, profile, done) {
       if (!req.user) {
-         console.log(profile.name);
         fullName = profile._json.name.split(' ');
         User.findOrCreate({ "loginMethods.id": profile.id }, {
            displayName: profile.username,
@@ -211,7 +209,6 @@ module.exports = function(passport){
     },
     function(req,accessToken, refreshToken, profile, done) {
       if (!req.user) {
-         console.log(profile);
         User.findOrCreate({ "loginMethods.id": profile.id }, {
            displayName: profile.displayName,
            firstName: profile.name.givenName,

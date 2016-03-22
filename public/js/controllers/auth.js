@@ -56,6 +56,7 @@ appAuthentication.controller('authController', function($scope, $rootScope,$http
    $scope.checkSession = function() {
       $http.get('/success', $scope.user).success(function(data){
         if(data.state == 'success' && data.user){
+           console.log('anything');
           $rootScope.authenticated = true;
           $rootScope.current_user = {
              id: data.user.id,
