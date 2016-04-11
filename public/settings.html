@@ -16,27 +16,33 @@
 
 <article class="eight wide column">
   <article ng-show="isSelected('personal')">
-     <form class="ui form" ng-submit="update(displayName,avatar)">
+     <form class="ui form" ng-submit="update(current_user)">
+
         <h4 class="ui dividing header">Personal Information</h4>
+
         <div class="two fields">
           <div class="field">
             <label>Name</label>
             <div class="two fields">
               <div class="field">
-                <input type="text" name="first-name" placeholder="First Name" >
+                <input type="text" name="first-name" placeholder="First Name" ng-model="current_user.firstName">
               </div>
               <div class="field">
-                <input type="text" name="last-name" placeholder="Last Name">
+                <input type="text" name="last-name" placeholder="Last Name" ng-model="current_user.lastName">
               </div>
             </div>
           </div>
         </div>
+
+        <br>
+
         <div class="field">
-          <input type="text" name="displayName" placeholder="{{user_display}}" ng-model="displayName">
+           <label>Display Name</label>
+          <input type="text" name="displayName" ng-model="current_user.displayName">
         </div>
 
-        <h5>Choose a avatar...</h5>
-        <input class="ui button blue" type="submit" value="Send" id="send" />
+        <input class="ui button blue" type="submit" value="Update" id="send" />
+
      </form>
   </article>
 
@@ -68,10 +74,10 @@
        <a class="ui button" href="/connect/local">
          Local
        </a>
-        <a class="ui facebook button" href="/connect/facebook">
-          <i class="facebook icon"></i>
-          Facebook
-       </a>
+      <a class="ui facebook button" href="/connect/facebook">
+       <i class="facebook icon"></i>
+       Facebook
+      </a>
       <a class="ui twitter button" href="/connect/twitter">
         <i class="twitter icon"></i>
         Twitter

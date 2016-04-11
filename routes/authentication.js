@@ -19,8 +19,6 @@ module.exports = function(passport){
            following: req.user.following,
            followers: req.user.followers,
            posts: req.user.posts,
-           firstName: req.user.firstName,
-           lastName: req.user.lastName,
            avatar: req.user.avatar
         } : ""});
     });

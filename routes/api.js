@@ -293,9 +293,37 @@ router.route('/searchUsers/:searchText')
         console.log(err)
         return res.json(err);
       }
-      
+
       return res.json(users);
     });
   });
+
+  //update the current user info
+  router.route('/user/:id')
+    .put(function(req, res) {
+      User.update({
+        _id: req.params.id
+      },{
+        $pull: { following: req.body._id }
+      },{
+        upsert: true
+      }, function(err) {
+        if (err) {
+          console.log('Error when updating ' + user.displayName);
+          return res.send(err);
+        }
+      });
+    })
+
+   .delete(function(req, res) {
+      User.remove({
+         _id: req.params.id
+      }, function(err) {
+         if (err) {
+            console.log('Error deleting user ' + user.displayName);
+            return res.send(err);
+         }
+      });
+   });
 
 module.exports = router;
