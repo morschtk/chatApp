@@ -284,4 +284,18 @@ router.route('/unfollow/:id')
     });
   });
 
+router.route('/searchUsers/:searchText')
+  .get(function(req, res) {
+    User.find({displayName: new RegExp(req.params.searchText, 'i')}, {displayName: 1, avatar: 1, uniqueName: 1, posts: { $slice: -1 }})
+      .limit(10)
+      .exec(function(err, users) {
+      if (err) {
+        console.log(err)
+        return res.json(err);
+      }
+      
+      return res.json(users);
+    });
+  });
+
 module.exports = router;

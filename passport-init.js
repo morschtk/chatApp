@@ -125,7 +125,19 @@ module.exports = function(passport){
         }, function (err, user) {
           if (err) { return done(err); }
 
-          return done(err, user);
+          User.findOneAndUpdate({
+            "loginMethods.id": profile.id
+          },{
+            $set: {
+              uniqueName: user._id
+            }
+          },{
+            new: true
+          }, function(err, user) {
+            if (err) { return done(err); }
+
+            return done(err, user);
+          });
 
         });
       } else {
@@ -177,7 +189,20 @@ module.exports = function(passport){
         }, function (err, user) {
           if (err) { return done(err); }
 
-          return done(err, user);
+          // var newUserName = user._id;
+          User.findOneAndUpdate({
+            "loginMethods.id": profile.id
+          },{
+            $set: {
+              uniqueName: user._id
+            }
+          },{
+            new: true
+          }, function(err, user) {
+            if (err) { return done(err); }
+
+            return done(err, user);
+          });
 
         });
       } else {
@@ -218,7 +243,19 @@ module.exports = function(passport){
         }, function (err, user) {
           if (err) { return done(err); }
 
-          return done(err, user);
+          User.findOneAndUpdate({
+            "loginMethods.id": profile.id
+          },{
+            $set: {
+              uniqueName: user._id
+            }
+          },{
+            new: true
+          }, function(err, user) {
+            if (err) { return done(err); }
+
+            return done(err, user);
+          });
 
         });
       } else {

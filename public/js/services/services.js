@@ -35,9 +35,17 @@ appServices.factory('getDisplayFeed', function($resource) {
     });
 });
 
+appServices.factory('getUsers', function($resource) {
+  return $resource('/api/searchUsers/:searchText', null,
+    {
+      'update': {method: 'put' }
+    });
+});
+
 appServices.factory('currentUserService', function() {
     var authenticated = false;
     var userId = "";
+    var userName = "";
     var displayName = "";
     var following = [];
     var followers = [];
@@ -46,6 +54,7 @@ appServices.factory('currentUserService', function() {
     var firstName = "";
     var lastName = "";
     var currUserPosts = [];
+    var searchResults = [];
 
     return {
     	getAuthenticated: function() {
@@ -59,6 +68,12 @@ appServices.factory('currentUserService', function() {
       },
       setUserId: function(value) {
           userId = value;
+      },
+      getUserName: function() {
+          return userName;
+      },
+      setUserName: function(value) {
+          userName = value;
       },
       getDisplayName: function() {
           return displayName;
@@ -107,6 +122,12 @@ appServices.factory('currentUserService', function() {
       },
       setCurrUserPosts: function(value) {
           currUserPosts = value;
+      },
+      getSearchResults: function() {
+          return searchResults;
+      },
+      setSearchResults: function(value) {
+          searchResults = value;
       }
   };
 });

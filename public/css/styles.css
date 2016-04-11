@@ -5,6 +5,11 @@ body {
    font-family: "Source Sans Pro","Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
+.dropDownList:hover{
+  background-color: #e3e3e3 !important;
+  cursor: pointer;
+}
+
 section.ui.grid.container {
    padding-top: 40px;
    min-height: 100%;

@@ -28,3 +28,24 @@
     <input type="reset" value="Cancel" class="ui button red" />
   </form>
 </article>
+
+<div class="ui modal">
+  <div class="content">
+    <div class="description">
+      <div class="ui header">Please create a username.</div>
+      <p>Don't worry you can always change it later.</p>
+      <div class="ui input">
+        <input type="text" ng-model="uniqueName" placeholder="username..">
+      </div>
+    </div>
+  </div>
+  <div class="actions left">
+    <a href="" class="ui deny">
+      Skip
+    </a>
+    <div class="ui positive right labeled icon button">
+      Use {{uniqueName}}
+      <i class="checkmark icon"></i>
+    </div>
+  </div>
+</div>

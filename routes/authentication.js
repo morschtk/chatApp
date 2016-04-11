@@ -48,6 +48,25 @@ module.exports = function(passport){
         failureFlash: true
     }));
 
+    router.route('/assignUniqueName')
+      .put(function(req, res) {
+        User.findOneAndUpdate({
+          _id: req.body.userId
+        },{
+          $set: {
+            uniqueName: req.body.uniqueName
+          }
+        },{
+          new: true,
+        }, function(err, user) {
+            if(err) {
+              console.log('Error: Creating Unique Name.')
+              res.send({state: 'failure', msg: 'That name has already been taken, please choose another.'});
+            }
+            res.send({state: 'success', userName: user.uniqueName});
+        });
+      });
+
     //Facebook
     router.get('/facebook', passport.authenticate('facebook'));
 

@@ -1,0 +1,32 @@
+<header class="ui sixteen wide column" ng-cloak>
+  <nav class="ui secondary pointing menu blue floating top fixed">
+      <a class="item" href="#" ng-class="{ active : isSelected('index')}" ng-click="selectedPage('index')">
+        <i class="home icon"></i> Home
+      </a>
+      <a class="item" href="#/settings" ng-if="authenticated()" ng-class="{ active : isSelected('settings')}" ng-click="selectedPage('settings')">
+        <i class="home icon"></i> Settings
+      </a>
+
+      <nav class="right secondary menu">
+        <a class="item" href="#/login" ng-if="!authenticated()" ng-class="{ active : isSelected('login')}" ng-click="selectedPage('login')">
+          <i class="mail icon"></i> Login
+        </a>
+        <a class="item" href="#/register" ng-if="!authenticated()" ng-class="{ active : isSelected('register')}" ng-click="selectedPage('register')">
+          <i class="user icon"></i> Register
+        </a>
+        <div class="ui search selection dropdown" ng-show="authenticated()">
+          <i class="dropdown icon"></i>
+          <input class="search" ng-keyup="$event.keyCode == 13 && searchPage(searchText)" ng-model="searchText" ng-change="displaySearch(searchText)" autocomplete="off" placeholder="Search Users">
+          <div class="menu" style="overflow-y: hidden;">
+            <div style="display: none !important;" class="item"></div>
+            <div ng-repeat="aUser in searchedUsers">
+              <a ng-href="#/{{aUser.uniqueName}}"><div class="item dropDownList"><img ng-src="{{aUser.avatar}}" class="ui avatar circular image">{{aUser.displayName}}</div></a>
+            </div>
+          </div>
+        </div>
+        <a class="item" href ng-click="logout()" ng-if="authenticated()">
+          <i class="user icon"></i> Logout
+        </a>
+      </nav>
+    </nav>
+  </header>

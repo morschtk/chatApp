@@ -1,10 +1,10 @@
-var app = angular.module('chat-app', ['ngRoute', 'ngResource', 'appServices', 'appSettings', 'appAuthentication', 'appPosts']);
+var app = angular.module('chat-app', ['ngRoute', 'ngResource', 'appServices', 'appSettings', 'appAuthentication', 'appPosts', 'appSearch']);
 
 app.config(function($routeProvider, $interpolateProvider){
   $routeProvider
     //the home page
     .when('/', {
-      templateUrl: '/home.html',
+      templateUrl: '/home.html'
     })
     //The settings page
     .when('/settings', {
@@ -13,24 +13,55 @@ app.config(function($routeProvider, $interpolateProvider){
     })
     //the login display
     .when('/login', {
-      templateUrl: 'login.html',
+      templateUrl: 'login.html'
     })
     //the signup display
     .when('/register', {
-      templateUrl: 'register.html',
+      templateUrl: 'register.html'
     })
     //the error page
     .when('/error', {
-      templateUrl: 'error.html',
+      templateUrl: 'error.html'
+    })
+    //Search page
+    .when('/search/:query', {
+      templateUrl: '/search.html',
+      controller: 'searchController'
     })
     //friend Page
     .when('/:userName', {
-      templateUrl: '/friendPage.html',
+      templateUrl: '/friendPage.html'
     })
 });
 
-app.controller('navController', function($scope) {
-  	$scope.page = "index";
+app.controller('navController', function($scope, getUsers, currentUserService, $location) {
+	$scope.page = "index";
+  $scope.authenticated = currentUserService.getAuthenticated;
+  $scope.searchText = '';
+
+  $scope.searchedUsers = [];
+
+  $('.ui.search.selection.dropdown')
+    .dropdown({
+      className: {
+        filtered: null
+      }
+  });
+
+  $scope.searchPage = function(query) {
+    currentUserService.setSearchResults($scope.searchedUsers);
+    $location.path('/search/' + query);
+  };
+
+  $scope.friendPage = function(friendId) {
+    $location.path('/' + friendId);
+  };
+
+  $scope.displaySearch = function(theQuery) {
+    getUsers.query({searchText: theQuery}, function(users) {
+      $scope.searchedUsers = users;
+    });
+  };
 
 	$scope.selectedPage = function(currentPage) {
 		$scope.page = currentPage;
@@ -52,6 +83,14 @@ app.directive('chatFeed', function(){
   return {
     restrict: 'E',
     templateUrl: '/partials/chatFeed.html'
+  };
+});
+
+app.directive('mainNav', function() {
+  return {
+    restrict: 'E',
+    templateUrl: '/partials/mainNav.html',
+    controller: 'navController'
   };
 });
 

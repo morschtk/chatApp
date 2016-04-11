@@ -1,0 +1,23 @@
+<article class="eight wide column">
+  <h3 class="ui blue header"><i class="ui chat icon"></i>Matching Users</h3>
+   <div class="ui divider"></div>
+   <div class="ui feed message" ng-repeat="aUser in users | orderBy:'created_at':true" ng-class-odd="'floating teal'" ng-class-even="''">
+     <div class="event">
+       <div class="content">
+         <div class="summary">
+           <a class="user" ng-click="friendPage(aUser.uniqueName)">
+           <!-- <a class="user" href="/#"> -->
+            {{aUser.displayName}}
+           </a>
+           <div class="date">
+            {{(aUser.posts[0].created_at) | date:"h:mma 'on' MMM d, y"}}
+           </div>
+           <br>
+           <div>
+             {{aUser.posts[0].text}}
+           </div>
+         </div>
+       </div>
+     </div>
+   </div>
+</article>
