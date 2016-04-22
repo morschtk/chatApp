@@ -34,8 +34,7 @@
            <a ng-if="!checkFollows(post.user_id)" ng-click="unfollowUser(post.user_id)">Unfollow {{post.created_by}}</a>
            <br>
          </div>
-         <div ng-if="editingPost !== post">
-           {{post.text}}
+         <div ng-if="editingPost !== post" ng-bind-html="post.displayText">
          </div>
          <div ng-if="editingPost === post">
            <div class="ui form">

@@ -52,29 +52,44 @@ router.route('/posts')
    })
 
    //Create a new post
-   .post(function(req, res){
-    // Update the current post
-      User.findOneAndUpdate({
-        _id: req.body.created_by
-      },{
-        $push: {posts: { text: req.body.text}}
-      },{
-        new: true
-      },
-      function(err, user){
-        if(err){
-          return res.send(err);
-        }
-        var newPost = {
-          text : user.posts[user.posts.length - 1].text,
-          created_at : user.posts[user.posts.length - 1].created_at,
-          _id : user.posts[user.posts.length - 1]._id,
-          user_id : user._id,
-          created_by : user.displayName
-        };
-        return res.json(newPost);
-      });
-   });
+  .post(function(req, res){
+    // var reg = /(\s|^)#[a-zA-Z0-9][^\s]+/g;
+    var reg = /#[a-zA-Z0-9][^\s]+/g;
+    var tagsInText = req.body.text.match(reg);
+    if (!tagsInText) {
+      tagsInText = [];
+    }
+    User.findOneAndUpdate({
+      _id: req.body.created_by
+    },{
+      $push: {posts: { text: req.body.text, tags: tagsInText }}
+    },{
+      new: true
+    },
+    function(err, user){
+      if(err){
+        return res.send(err);
+      }
+      var newPost = {
+        text : user.posts[user.posts.length - 1].text,
+        created_at : user.posts[user.posts.length - 1].created_at,
+        _id : user.posts[user.posts.length - 1]._id,
+        user_id : user._id,
+        displayText: user.posts[user.posts.length - 1].text,
+        created_by : user.displayName
+      };
+
+      if(user.posts[user.posts.length - 1].tags.length) {
+        var setOfTags = new Set(user.posts[user.posts.length - 1].tags);
+        setOfTags.forEach(function(tag) {
+          var regex = new RegExp(tag, 'g');
+          newPost.displayText = newPost.displayText.replace(regex, "<a href='#/search/" + tag.slice(1) + "'>" + tag + "</a>");
+        });
+      }
+
+      return res.json(newPost);
+    });
+ });
 
 // Gets all the posts from who the current user is following including themself.
 router.route('/theFeed/:id')
@@ -93,9 +108,19 @@ router.route('/theFeed/:id')
             user_id: current_user._id,
             created_by: current_user.displayName,
             text: current_user.posts[i].text,
+            displayText: current_user.posts[i].text,
             created_at: current_user.posts[i].created_at,
             _id: current_user.posts[i]._id
           };
+
+          if(current_user.posts[i].tags.length) {
+            var setOfTags = new Set(current_user.posts[i].tags);
+            setOfTags.forEach(function(tag) {
+              var regex = new RegExp(tag, 'g');
+              post.displayText = post.displayText.replace(regex, "<a href='#/search/" + tag.slice(1) + "'>" + tag + "</a>");
+            });
+          }
+
           allPosts.push(post);
         }
 
@@ -105,9 +130,19 @@ router.route('/theFeed/:id')
               user_id: current_user.following[i]._id,
               created_by: current_user.following[i].displayName,
               text: current_user.following[i].posts[n].text,
+              displayText: current_user.following[i].posts[n].text,
               created_at: current_user.following[i].posts[n].created_at,
               _id: current_user.following[i].posts[n]._id
             };
+
+            if(current_user.following[i].posts[n].tags.length) {
+              var setOfTags = new Set(current_user.following[i].posts[n].tags);
+              setOfTags.forEach(function(tag) {
+                var regex = new RegExp(tag, 'g');
+                post.displayText = post.displayText.replace(regex, "<a href='#/search/" + tag.slice(1) + "'>" + tag + "</a>");
+              });
+            }
+
             allPosts.push(post);
           }
           current_user.following[i] = current_user.following[i]._id;
@@ -150,9 +185,19 @@ router.route('/theDisplayFeed/:id')
             user_id: display_user._id,
             created_by: display_user.displayName,
             text: display_user.posts[i].text,
+            displayText: display_user.posts[i].text,
             created_at: display_user.posts[i].created_at,
             _id: display_user.posts[i]._id
           };
+
+          if(display_user.posts[i].tags.length) {
+            var setOfTags = new Set(display_user.posts[i].tags);
+            setOfTags.forEach(function(tag) {
+              var regex = new RegExp(tag, 'g');
+              post.displayText = post.displayText.replace(regex, "<a href='#/search/" + tag.slice(1) + "'>" + tag + "</a>");
+            });
+          }
+
           allPosts.push(post);
         }
 
@@ -184,11 +229,11 @@ router.route('/posts/:id')
       },{
         upsert: true
       },
-      function(err){
+      function(err, user){
         if(err){
           return res.send(err);
         }
-          res.json(User);
+          res.json(user);
       });
     })
 

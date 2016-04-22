@@ -21,7 +21,8 @@ var userSchema = new mongoose.Schema({
    posts: [{
       id: {type: Schema.Types.ObjectId},
       created_at: {type: Date, default: Date.now},
-      text: String
+      text: String,
+      tags: [{ type: String, default: [] }]
    }]
 });
 

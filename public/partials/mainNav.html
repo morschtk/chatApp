@@ -20,7 +20,7 @@
           <div class="menu" style="overflow-y: hidden;">
             <div style="display: none !important;" class="item"></div>
             <div ng-repeat="aUser in searchedUsers">
-              <a ng-href="#/{{aUser.uniqueName}}"><div class="item dropDownList"><img ng-src="{{aUser.avatar}}" class="ui avatar circular image">{{aUser.displayName}}</div></a>
+              <a ng-href="#/{{aUser.uniqueName}}"><div class="item dropDownList"><img ng-src="{{aUser.avatar || 'http://wallpapercave.com/wp/qi6CA4t.png'}}" class="ui avatar circular image">{{aUser.displayName}}</div></a>
             </div>
           </div>
         </div>

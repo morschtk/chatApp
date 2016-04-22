@@ -1,4 +1,4 @@
-var appPosts = angular.module('appPosts', ['appServices']);
+var appPosts = angular.module('appPosts', ['appServices', 'ngSanitize']);
 
 appPosts.controller('postController', function($scope, $rootScope, postService, followService, unfollowService, getFeed, getDisplayFeed, currentUserService, $routeParams, $location){
   $scope.paramName = $routeParams.userName;
